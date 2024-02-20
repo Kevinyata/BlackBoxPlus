@@ -1,0 +1,16 @@
+<?import javafx.scene.shape.Polygon?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<?import java.lang.Double?>
+<Polygon fill="DODGERBLUE" layoutX="108.0" layoutY="121.0" stroke="BLACK" strokeType="INSIDE">
+    <points>
+        <Double>-50.0</Double> <Double>-30.0</Double>
+        <Double>0.0</Double> <Double>-60.0</Double>
+        <Double>50.0</Double> <Double>-30.0</Double>
+        <Double>50.0</Double> <Double>30.0</Double>
+        <Double>0.0</Double> <Double>60.0</Double>
+        <Double>-50.0</Double> <Double>30.0</Double>
+    </points>
+</Polygon>
