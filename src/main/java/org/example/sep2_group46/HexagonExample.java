@@ -77,7 +77,10 @@ public class HexagonExample extends Application {
         int max = 62; // setting max for the random numbers
         int[] randNum = new int[5]; // array to store the random numbers
         int tempRandNum; // temporary integer used for comparing if there is any duplicate random numbers
-        boolean repeat; // used to check if there is any repeat numbers
+        boolean repeat; // used to check if there is any repeat numbers#Sphere[] atoms = new Sphere[5];
+        Sphere[] atoms = new Sphere[5];
+        Circle[] COIs = new Circle[5];
+
         for(int i = 0; i < 5; i++)  // loop to get the 5 atoms
         {
             // loop to get the random number and check if there is any repeat numbers and to get another random number if there is a repeat
@@ -99,6 +102,7 @@ public class HexagonExample extends Application {
             Circle COI = createCircleOfInfluence();
             COI.setLayoutX(xyLocation[0][randNum[z]]); // getting the x location of the random numbers chosen
             COI.setLayoutY(xyLocation[1][randNum[z]]); // getting the y location of the random numbers chosen
+            COIs[z] = COI;
             root.getChildren().add(COI);
         }
         for(int z = 0; z < 5; z++) // loop to print out the 5 atoms
@@ -110,6 +114,7 @@ public class HexagonExample extends Application {
             atom.setMaterial(material); // setting the colours to the atoms
             atom.setLayoutX(xyLocation[0][randNum[z]]); // getting the x location of the random numbers chosen
             atom.setLayoutY(xyLocation[1][randNum[z]]); // getting the y location of the random numbers chosen
+            atoms[z] = atom;
             root.getChildren().add(atom);
         }
 
@@ -119,9 +124,21 @@ public class HexagonExample extends Application {
         b.setLayoutY(680);
         b.setPrefSize(150, 50);
         b.setOnAction(actionEvent -> {
-            if(b.getText().equals("Show")) b.setText("Hide");
-            else if(b.getText().equals("Hide")) b.setText("Show");});
+            if(b.getText().equals("Show"))
+            {
+                ShowAtoms(atoms, COIs);
+                b.setText("Hide");
+            }
+            else if(b.getText().equals("Hide")) {
+                HideAtoms(atoms, COIs);
+                b.setText("Show");
+            }
+        });
         root.getChildren().add(b);
+
+
+
+        HideAtoms(atoms, COIs);
 
 
 
@@ -159,6 +176,24 @@ public class HexagonExample extends Application {
         COI.setFill(null); // setting the inside of the circle of influence to empty, so it is just an outline
         COI.setStroke(Color.WHITE); // setting the outline of the circle of influence to white
         return COI;
+    }
+
+    private void ShowAtoms(Sphere[] s, Circle[] c)
+    {
+        for(int i = 0; i < 5; i++)
+        {
+            c[i].setVisible(true);
+            s[i].setVisible(true);
+        }
+    }
+
+    private void HideAtoms(Sphere[] s, Circle[] c)
+    {
+        for(int i = 0; i < 5; i++)
+        {
+            c[i].setVisible(false);
+            s[i].setVisible(false);
+        }
     }
 
 
