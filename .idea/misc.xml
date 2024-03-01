@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="MavenProjectsManager">
@@ -7,11 +8,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectResources">
-    <default-html-doctype>jar:file:\C:\Users\ibilo\AppData\Local\Programs\IntelliJ IDEA Ultimate\lib\app.jar!\standardSchemas\xhtml1-transitional.xsd</default-html-doctype>
-    <xml-schema-version>XMLSchema_1_1</xml-schema-version>
-  </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_21" default="true" project-jdk-name="openjdk-20" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_20" default="true" project-jdk-name="openjdk-20" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
 </project>

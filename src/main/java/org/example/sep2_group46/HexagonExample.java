@@ -78,8 +78,8 @@ public class HexagonExample extends Application {
         int[] randNum = new int[5]; // array to store the random numbers
         int tempRandNum; // temporary integer used for comparing if there is any duplicate random numbers
         boolean repeat; // used to check if there is any repeat numbers#Sphere[] atoms = new Sphere[5];
-        Sphere[] atoms = new Sphere[5];
-        Circle[] COIs = new Circle[5];
+        Sphere[] atoms = new Sphere[5]; //used for visibility conditions for atoms
+        Circle[] COIs = new Circle[5]; //used for visibility conditions for circles of influence
 
         for(int i = 0; i < 5; i++)  // loop to get the 5 atoms
         {
@@ -126,18 +126,21 @@ public class HexagonExample extends Application {
         b.setOnAction(actionEvent -> {
             if(b.getText().equals("Show"))
             {
+                //Shows atoms
                 ShowAtoms(atoms, COIs);
-                b.setText("Hide");
+                b.setText("Hide"); //Switches functionality to hide
             }
             else if(b.getText().equals("Hide")) {
+                //Hides atoms
                 HideAtoms(atoms, COIs);
-                b.setText("Show");
+                b.setText("Show"); //Switches functionality to show
             }
         });
         root.getChildren().add(b);
 
 
 
+        //Hides atoms initially
         HideAtoms(atoms, COIs);
 
 
@@ -180,6 +183,7 @@ public class HexagonExample extends Application {
 
     private void ShowAtoms(Sphere[] s, Circle[] c)
     {
+        //Sets atoms visible
         for(int i = 0; i < 5; i++)
         {
             c[i].setVisible(true);
@@ -189,6 +193,7 @@ public class HexagonExample extends Application {
 
     private void HideAtoms(Sphere[] s, Circle[] c)
     {
+        //Sets atoms invisible
         for(int i = 0; i < 5; i++)
         {
             c[i].setVisible(false);
