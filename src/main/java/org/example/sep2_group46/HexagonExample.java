@@ -75,20 +75,20 @@ public class HexagonExample extends Application {
 
         int min = 1; // setting min for the random numbers
         int max = 62; // setting max for the random numbers
-        int[] randNum = new int[5]; // array to store the random numbers
+        int[] randNum = new int[6]; // array to store the random numbers
         int tempRandNum; // temporary integer used for comparing if there is any duplicate random numbers
         boolean repeat; // used to check if there is any repeat numbers#Sphere[] atoms = new Sphere[5];
-        Sphere[] atoms = new Sphere[5]; //used for visibility conditions for atoms
-        Circle[] COIs = new Circle[5]; //used for visibility conditions for circles of influence
+        Sphere[] atoms = new Sphere[6]; //used for visibility conditions for atoms
+        Circle[] COIs = new Circle[6]; //used for visibility conditions for circles of influence
 
-        for(int i = 0; i < 5; i++)  // loop to get the 5 atoms
+        for(int i = 0; i < 6; i++)  // loop to get the 6 atoms
         {
             // loop to get the random number and check if there is any repeat numbers and to get another random number if there is a repeat
             do {
                 repeat = false;
                 tempRandNum = (int) (Math.random() * (max - min + 1) + min);
                 tempRandNum--;
-                for (int z = 0; z < 5; z++) {
+                for (int z = 0; z < 6; z++) {
                     if (randNum[z] == tempRandNum) {
                         repeat = true;
                         break;
@@ -96,8 +96,8 @@ public class HexagonExample extends Application {
                 }
             } while (repeat);
             randNum[i] = tempRandNum; // storing the random number in the array
-        } // loop to print out the 5 circles of influence
-        for(int z = 0; z < 5; z++)
+        } // loop to print out the 6 circles of influence
+        for(int z = 0; z < 6; z++)
         {
             Circle COI = createCircleOfInfluence();
             COI.setLayoutX(xyLocation[0][randNum[z]]); // getting the x location of the random numbers chosen
@@ -105,7 +105,7 @@ public class HexagonExample extends Application {
             COIs[z] = COI;
             root.getChildren().add(COI);
         }
-        for(int z = 0; z < 5; z++) // loop to print out the 5 atoms
+        for(int z = 0; z < 6; z++) // loop to print out the 6 atoms
         {
             Sphere atom = createAtom();
             PhongMaterial material = new PhongMaterial(); // used for setting the atoms colour
@@ -184,7 +184,7 @@ public class HexagonExample extends Application {
     private void ShowAtoms(Sphere[] s, Circle[] c)
     {
         //Sets atoms visible
-        for(int i = 0; i < 5; i++)
+        for(int i = 0; i < 6; i++)
         {
             c[i].setVisible(true);
             s[i].setVisible(true);
@@ -194,7 +194,7 @@ public class HexagonExample extends Application {
     private void HideAtoms(Sphere[] s, Circle[] c)
     {
         //Sets atoms invisible
-        for(int i = 0; i < 5; i++)
+        for(int i = 0; i < 6; i++)
         {
             c[i].setVisible(false);
             s[i].setVisible(false);
