@@ -3,6 +3,7 @@ package org.example.sep2_group46;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
@@ -13,7 +14,6 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Sphere;
 import javafx.stage.Stage;
 import java.lang.Math;
-
 
 public class HexagonExample extends Application {
 
@@ -30,9 +30,11 @@ public class HexagonExample extends Application {
         double XLoc = 570; //The initial X location before offset is applied
         boolean flag = true; //Indicates whether X location decreases or increases
         double[][] xyLocation = new double[2][62]; // double array used to store x and y location for atom and circle of influence placement
+        double[][] rayEntry = new double[62][2]; // double array to store the location of the ray entry points
 
         // Create a tessellation of rotated hexagons
         int j = 0;
+        int k = 0;
         while(j <= 57)
         {
 
@@ -51,16 +53,53 @@ public class HexagonExample extends Application {
                 // saving each hexagon's x and y coordinates
                 xyLocation[0][i + j + 1] = XLoc + (OffsetX * i);
                 xyLocation[1][i + j + 1] = 200 + OffsetY;
-
+                // locations for the x coordinates of the 4 of the hexagons sides
+                double topBottomLeft = XLoc + (OffsetX * i) - (Math.sqrt(1875) * Math.sin(0.523599));
+                double topBottomRight = XLoc + (OffsetX * i) + (Math.sqrt(1875) * Math.sin(0.523599));
+                //setting coordinates of the entries coming from the right
+                if((i + j + 1) == 1 || (i + j + 1) == 6 || (i + j + 1) == 12 || (i + j + 1) == 19 || (i + j + 1) == 27 || (i + j + 1) == 36 || (i + j + 1) == 44 || (i + j + 1) == 51 || (i + j + 1) == 57)
+                {
+                    rayEntry[k][0] = XLoc + (OffsetX * i) - Math.sqrt(1875);
+                    rayEntry[k][1] = 200 + OffsetY;
+                    k++;
+                }
+                if((i + j + 1) < 7 || (i + j + 1) == 12 || (i + j + 1) == 19 || (i + j + 1) == 27)
+                {
+                    rayEntry[k][0] = topBottomLeft;
+                    rayEntry[k][1] = 200 + OffsetY - 37.5;
+                    k++;
+                }
+                if((i + j + 1) < 6 || (i + j + 1) == 11 || (i + j + 1) == 18 || (i + j + 1) == 26 || (i + j + 1) == 35)
+                {
+                    rayEntry[k][0] = topBottomRight;
+                    rayEntry[k][1] = 200 + OffsetY - 37.5;
+                    k++;
+                }
+                if((i + j + 1) == 5 || (i + j + 1) == 11 || (i + j + 1) == 18 || (i + j + 1) == 26 || (i + j + 1) == 35 || (i + j + 1) == 43 || (i + j + 1) == 50 || (i + j + 1) == 56 || (i + j + 1) == 61)
+                {
+                    rayEntry[k][0] = XLoc + (OffsetX * i) + Math.sqrt(1875);
+                    rayEntry[k][1] = 200 + OffsetY;
+                    k++;
+                }
+                if((i + j + 1) == 35 || (i + j + 1) == 43 || (i + j + 1) == 50 || (i + j + 1) > 55)
+                {
+                    rayEntry[k][0] = topBottomRight;
+                    rayEntry[k][1] = 200 + OffsetY + 37.5;
+                    k++;
+                }
+                if((i + j + 1) == 27 || (i + j + 1) == 36 || (i + j + 1) == 44 || (i + j + 1) == 51 || (i + j + 1) > 56)
+                {
+                    rayEntry[k][0] = topBottomLeft;
+                    rayEntry[k][1] = 200 + OffsetY + 37.5;
+                    k++;
+                }
                 root.getChildren().add(hexagon);
             }
 
             j+=numHexagons;
-
             if(numHexagons == 9)            {
-                flag = false; //When number of hexagons printed reaches 9, this turns off the flag in order to start decrementing the number
+               flag = false; //When number of hexagons printed reaches 9, this turns off the flag in order to start decrementing the number
             }
-
             if(flag)
             {
                 numHexagons++;
@@ -71,6 +110,15 @@ public class HexagonExample extends Application {
                 XLoc += 42;
             }
             OffsetY += 75; //Changes y location offset for each row
+        }
+
+        for(int i = 0; i < 61; i++)
+        {
+            Circle entry = createEntry();
+            entry.setFill(Color.WHITE);
+            entry.setLayoutX(rayEntry[i][0]);
+            entry.setLayoutY(rayEntry[i][1]);
+            root.getChildren().add(entry);
         }
 
         int min = 1; // setting min for the random numbers
@@ -163,6 +211,13 @@ public class HexagonExample extends Application {
         return hexagon;
     }
 
+    private Circle createEntry()
+    {
+        Circle entry = new Circle();
+        entry.setRadius(5.0f);
+        return entry;
+    }
+
     // method to create the atom
     private Sphere createAtom()
     {
@@ -201,10 +256,7 @@ public class HexagonExample extends Application {
         }
     }
 
-
-
     public static void main(String[] args) {
         launch(args);
     }
 }
-
