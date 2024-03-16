@@ -10,13 +10,16 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Sphere;
 import javafx.stage.Stage;
 import java.lang.Math;
 
+
 public class HexagonExample extends Application {
 
+    @SuppressWarnings("DuplicateExpressions")
     @Override
     public void start(Stage primaryStage) {
         Pane root = new Pane();
@@ -30,7 +33,14 @@ public class HexagonExample extends Application {
         double XLoc = 570; //The initial X location before offset is applied
         boolean flag = true; //Indicates whether X location decreases or increases
         double[][] xyLocation = new double[2][62]; // double array used to store x and y location for atom and circle of influence placement
-        double[][] rayEntry = new double[62][2]; // double array to store the location of the ray entry points
+        double[][] rayEntry = new double[54][2]; // double array to store the location of the ray entry points
+        String[] rayLabels = new String[54]; // String array which stores the numbering values
+
+        // to store the values in the rayLabels array
+        for(int i = 0, j = 1; i < 54; i++, j++)
+        {
+            rayLabels[i] = String.valueOf(j);
+        }
 
         // Create a tessellation of rotated hexagons
         int j = 0;
@@ -45,52 +55,84 @@ public class HexagonExample extends Application {
 
                 // Position and rotate hexagons
                 hexagon.setLayoutX(XLoc + (OffsetX * i));
-                hexagon.setLayoutY(200 + OffsetY);
+                hexagon.setLayoutY(70 + OffsetY);
 
                 // Rotate hexagons by 90 degrees
                 hexagon.setRotate(90);
 
                 // saving each hexagon's x and y coordinates
                 xyLocation[0][i + j + 1] = XLoc + (OffsetX * i);
-                xyLocation[1][i + j + 1] = 200 + OffsetY;
-                // locations for the x coordinates of the 4 of the hexagons sides
-                double topBottomLeft = XLoc + (OffsetX * i) - (Math.sqrt(1875) * Math.sin(0.523599));
-                double topBottomRight = XLoc + (OffsetX * i) + (Math.sqrt(1875) * Math.sin(0.523599));
-                //setting coordinates of the entries coming from the right
+                xyLocation[1][i + j + 1] = 70 + OffsetY;
+                //setting coordinates and labels of the entries coming from the left of the hexagons
                 if((i + j + 1) == 1 || (i + j + 1) == 6 || (i + j + 1) == 12 || (i + j + 1) == 19 || (i + j + 1) == 27 || (i + j + 1) == 36 || (i + j + 1) == 44 || (i + j + 1) == 51 || (i + j + 1) == 57)
                 {
                     rayEntry[k][0] = XLoc + (OffsetX * i) - Math.sqrt(1875);
-                    rayEntry[k][1] = 200 + OffsetY;
+                    rayEntry[k][1] = 70 + OffsetY;
+                    Label label = new Label(rayLabels[k]);
+                    label.setLayoutX(XLoc + (OffsetX * i) - Math.sqrt(1875) - 25);
+                    label.setLayoutY(70 + OffsetY - 10);
+                    label.setTextFill(Color.WHITE);
+                    root.getChildren().add(label);
                     k++;
                 }
+                //setting coordinates and labels of the entries coming from the top left of the hexagons
                 if((i + j + 1) < 7 || (i + j + 1) == 12 || (i + j + 1) == 19 || (i + j + 1) == 27)
                 {
-                    rayEntry[k][0] = topBottomLeft;
-                    rayEntry[k][1] = 200 + OffsetY - 37.5;
+                    rayEntry[k][0] = XLoc + (OffsetX * i) - (Math.sqrt(1875) * Math.sin(0.523599));
+                    rayEntry[k][1] = 70 + OffsetY - 37.5;
+                    Label label = new Label(rayLabels[k]);
+                    label.setLayoutX(XLoc + (OffsetX * i) - (Math.sqrt(1875) * Math.sin(0.523599)) - 15);
+                    label.setLayoutY(70 + OffsetY - 37.5 - 22.5);
+                    label.setTextFill(Color.WHITE);
+                    root.getChildren().add(label);
                     k++;
                 }
+                //setting coordinates and labels of the entries coming from the top right of the hexagons
                 if((i + j + 1) < 6 || (i + j + 1) == 11 || (i + j + 1) == 18 || (i + j + 1) == 26 || (i + j + 1) == 35)
                 {
-                    rayEntry[k][0] = topBottomRight;
-                    rayEntry[k][1] = 200 + OffsetY - 37.5;
+                    rayEntry[k][0] = XLoc + (OffsetX * i) + (Math.sqrt(1875) * Math.sin(0.523599));
+                    rayEntry[k][1] = 70 + OffsetY - 37.5;
+                    Label label = new Label(rayLabels[k]);
+                    label.setLayoutX(XLoc + (OffsetX * i) + (Math.sqrt(1875) * Math.sin(0.523599)) + 10);
+                    label.setLayoutY(70 + OffsetY - 37.5 - 22.5);
+                    label.setTextFill(Color.WHITE);
+                    root.getChildren().add(label);
                     k++;
                 }
+                //setting coordinates and labels of the entries coming from the right of the hexagons
                 if((i + j + 1) == 5 || (i + j + 1) == 11 || (i + j + 1) == 18 || (i + j + 1) == 26 || (i + j + 1) == 35 || (i + j + 1) == 43 || (i + j + 1) == 50 || (i + j + 1) == 56 || (i + j + 1) == 61)
                 {
                     rayEntry[k][0] = XLoc + (OffsetX * i) + Math.sqrt(1875);
-                    rayEntry[k][1] = 200 + OffsetY;
+                    rayEntry[k][1] = 70 + OffsetY;
+                    Label label = new Label(rayLabels[k]);
+                    label.setLayoutX(XLoc + (OffsetX * i) + Math.sqrt(1875) + 15);
+                    label.setLayoutY(70 + OffsetY - 10);
+                    label.setTextFill(Color.WHITE);
+                    root.getChildren().add(label);
                     k++;
                 }
+                //setting coordinates and labels of the entries coming from the bottom right of the hexagons
                 if((i + j + 1) == 35 || (i + j + 1) == 43 || (i + j + 1) == 50 || (i + j + 1) > 55)
                 {
-                    rayEntry[k][0] = topBottomRight;
-                    rayEntry[k][1] = 200 + OffsetY + 37.5;
+                    rayEntry[k][0] = XLoc + (OffsetX * i) + (Math.sqrt(1875) * Math.sin(0.523599));
+                    rayEntry[k][1] = 70 + OffsetY + 37.5;
+                    Label label = new Label(rayLabels[k]);
+                    label.setLayoutX(XLoc + (OffsetX * i) + (Math.sqrt(1875) * Math.sin(0.523599)) + 5);
+                    label.setLayoutY(70 + OffsetY + 37.5 + 5);
+                    label.setTextFill(Color.WHITE);
+                    root.getChildren().add(label);
                     k++;
                 }
+                //setting coordinates and labels of the entries coming from the bottom left of the hexagons
                 if((i + j + 1) == 27 || (i + j + 1) == 36 || (i + j + 1) == 44 || (i + j + 1) == 51 || (i + j + 1) > 56)
                 {
-                    rayEntry[k][0] = topBottomLeft;
-                    rayEntry[k][1] = 200 + OffsetY + 37.5;
+                    rayEntry[k][0] = XLoc + (OffsetX * i) - (Math.sqrt(1875) * Math.sin(0.523599));
+                    rayEntry[k][1] = 70 + OffsetY + 37.5;
+                    Label label = new Label(rayLabels[k]);
+                    label.setLayoutX(XLoc + (OffsetX * i) - (Math.sqrt(1875) * Math.sin(0.523599)) - 15);
+                    label.setLayoutY(70 + OffsetY + 37.5 + 5);
+                    label.setTextFill(Color.WHITE);
+                    root.getChildren().add(label);
                     k++;
                 }
                 root.getChildren().add(hexagon);
@@ -98,7 +140,7 @@ public class HexagonExample extends Application {
 
             j+=numHexagons;
             if(numHexagons == 9)            {
-               flag = false; //When number of hexagons printed reaches 9, this turns off the flag in order to start decrementing the number
+                flag = false; //When number of hexagons printed reaches 9, this turns off the flag in order to start decrementing the number
             }
             if(flag)
             {
@@ -110,15 +152,6 @@ public class HexagonExample extends Application {
                 XLoc += 42;
             }
             OffsetY += 75; //Changes y location offset for each row
-        }
-
-        for(int i = 0; i < 61; i++)
-        {
-            Circle entry = createEntry();
-            entry.setFill(Color.WHITE);
-            entry.setLayoutX(rayEntry[i][0]);
-            entry.setLayoutY(rayEntry[i][1]);
-            root.getChildren().add(entry);
         }
 
         int min = 1; // setting min for the random numbers
@@ -160,11 +193,32 @@ public class HexagonExample extends Application {
             material.setDiffuseColor(Color.GREY);
             material.setSpecularColor(Color.BLACK);
             atom.setMaterial(material); // setting the colours to the atoms
-            atom.setLayoutX(xyLocation[0][randNum[z]]); // getting the x location of the random numbers chosen
-            atom.setLayoutY(xyLocation[1][randNum[z]]); // getting the y location of the random numbers chosen
+            atom.setTranslateX(xyLocation[0][randNum[z]]); // getting the x location of the random numbers chosen
+            atom.setTranslateY(xyLocation[1][randNum[z]]); // getting the y location of the random numbers chosen
             atoms[z] = atom;
             root.getChildren().add(atom);
         }
+
+        Circle[] entries = new Circle[54];
+        for(int i = 0; i < 54; i++)
+        {
+            Circle entry = createEntry();
+            entry.setFill(Color.WHITE);
+            entry.setLayoutX(rayEntry[i][0]);
+            entry.setLayoutY(rayEntry[i][1]);
+            entries[i] = entry;
+        }
+
+        for(int i = 0; i < 54; i++)
+        {
+            int finalI = i;
+            entries[i].setOnMouseClicked(mouseEvent -> {
+                Line Ray = RayPath(atoms, COIs, rayEntry, finalI , entries);
+                root.getChildren().add(Ray);
+            });
+            root.getChildren().add(entries[i]);
+        }
+
 
         Button b = new Button();
         b.setText("Show");
@@ -195,6 +249,7 @@ public class HexagonExample extends Application {
 
         Scene scene = new Scene(root, 400, 400);
         primaryStage.setScene(scene);
+        primaryStage.setFullScreen(true);
         primaryStage.show();
     }
 
@@ -214,7 +269,7 @@ public class HexagonExample extends Application {
     private Circle createEntry()
     {
         Circle entry = new Circle();
-        entry.setRadius(5.0f);
+        entry.setRadius(4.0f);
         return entry;
     }
 
@@ -235,6 +290,294 @@ public class HexagonExample extends Application {
         COI.setStroke(Color.WHITE); // setting the outline of the circle of influence to white
         return COI;
     }
+
+    private Line RayPath(Sphere[] s, Circle[] c, double[][] RayEntry, int i, Circle[] entries) {
+        Line Ray = new Line();
+        Ray.setStrokeWidth(2);
+        Ray.setStroke(Color.WHITE);
+        Ray.setFill(Color.WHITE);
+        double l = RayEntry[i][0];
+        double y = RayEntry[i][1];
+        Ray.setStartX(l);
+        Ray.setStartY(y);
+
+        double addx = 1;
+        double addy = 0;
+
+        int[] arr1 = new int[]{1, 13, 17,21, 25, 31, 35, 39, 43};
+        int[] arr2 = new int[]{12, 16, 20, 24, 29, 33, 37, 41, 52};
+        int[] arr3 = new int[]{53, 42, 38, 34, 30, 50, 48, 46, 44};
+        int[] arr4 = new int[]{3,5,7,9,11,15,19,23,28};
+        int[] arr5 = new int[]{27, 32, 36, 40, 45, 47, 49, 51, 54};
+        int[] arr6 = new int[]{2,4,6, 8, 10, 14,18,22,26};
+        int x = i+1;
+        int dest=0;
+        int indx =0;
+        boolean flag2 = false;
+        int dist = 0;
+
+        for(int w = 0; w < 9; w++)
+        {
+            if(arr1[w] == x)
+            {
+                addx = 88;
+                addy = 0;
+                dest = arr2[w];
+                switch(w) //Determines distance
+                {
+                    case 0:
+                        dist = 5;
+                        break;
+                    case 1:
+                        dist = 6;
+                        break;
+                    case 2:
+                        dist = 7;
+                        break;
+                    case 3:
+                        dist = 8;
+                        break;
+                    case 4:
+                        dist = 9;
+                        break;
+                    case 5:
+                        dist = 8;
+                        break;
+                    case 6:
+                        dist = 7;
+                        break;
+                    case 7:
+                        dist = 6;
+                        break;
+                    case 8:
+                        dist = 5;
+                        break;
+                }
+
+                break;
+            }
+            if(arr2[w] == x)
+            {
+                addy = 0;
+                addx = -88;
+                dest = arr1[w];
+                switch(w) //Determines distance
+                {
+                    case 0:
+                        dist = 5;
+                        break;
+                    case 1:
+                        dist = 6;
+                        break;
+                    case 2:
+                        dist = 7;
+                        break;
+                    case 3:
+                        dist = 8;
+                        break;
+                    case 4:
+                        dist = 9;
+                        break;
+                    case 5:
+                        dist = 8;
+                        break;
+                    case 6:
+                        dist = 7;
+                        break;
+                    case 7:
+                        dist = 6;
+                        break;
+                    case 8:
+                        dist = 5;
+                        break;
+                }
+                break;
+            }
+            if(arr3[w] == x)
+            {
+                addy = ((2 * Math.sqrt(1875)) * -1) * Math.sin(Math.PI /3);
+                addx = Math.sqrt(1875) * -1;
+                dest = arr6[w];
+                switch(w) //Determines distance
+                {
+                    case 0:
+                        dist = 9;
+                        break;
+                    case 1:
+                        dist = 8;
+                        break;
+                    case 2:
+                        dist = 7;
+                        break;
+                    case 3:
+                        dist = 6;
+                        break;
+                    case 4:
+                        dist = 5;
+                        break;
+                    case 5:
+                        dist = 8;
+                        break;
+                    case 6:
+                        dist = 7;
+                        break;
+                    case 7:
+                        dist = 6;
+                        break;
+                    case 8:
+                        dist = 5;
+                        break;
+                }
+                break;
+            }
+            if(arr4[w] == x)
+            {
+                addx = Math.sqrt(1875) * -1;
+                addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI /3);
+                dest = arr5[w];
+                switch(w) //Determines distance
+                {
+                    case 0:
+                        dist = 5;
+                        break;
+                    case 1:
+                        dist = 6;
+                        break;
+                    case 2:
+                        dist = 7;
+                        break;
+                    case 3:
+                        dist = 8;
+                        break;
+                    case 4:
+                        dist = 9;
+                        break;
+                    case 5:
+                        dist = 8;
+                        break;
+                    case 6:
+                        dist = 7;
+                        break;
+                    case 7:
+                        dist = 6;
+                        break;
+                    case 8:
+                        dist = 5;
+                        break;
+                }
+                break;
+            }
+            if(arr5[w] == x)
+            {
+                addx = Math.sqrt(1875);
+                addy = ((2 * Math.sqrt(1875)) * -1)  * Math.sin(Math.PI /3);
+                dest = arr4[w];
+                switch(w) //Determines distance
+                {
+                    case 0:
+                        dist = 5;
+                        break;
+                    case 1:
+                        dist = 6;
+                        break;
+                    case 2:
+                        dist = 7;
+                        break;
+                    case 3:
+                        dist = 8;
+                        break;
+                    case 4:
+                        dist = 9;
+                        break;
+                    case 5:
+                        dist = 8;
+                        break;
+                    case 6:
+                        dist = 7;
+                        break;
+                    case 7:
+                        dist = 6;
+                        break;
+                    case 8:
+                        dist = 5;
+                        break;
+                }
+                break;
+            }
+            if(arr6[w] == x)
+            {
+                addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3);
+                addx = Math.sqrt(1875);
+                dest = arr3[w];
+                switch(w) //Determines distance
+                {
+                    case 0:
+                        dist = 9;
+                        break;
+                    case 1:
+                        dist = 8;
+                        break;
+                    case 2:
+                        dist = 7;
+                        break;
+                    case 3:
+                        dist = 6;
+                        break;
+                    case 4:
+                        dist = 5;
+                        break;
+                    case 5:
+                        dist = 8;
+                        break;
+                    case 6:
+                        dist = 7;
+                        break;
+                    case 7:
+                        dist = 6;
+                        break;
+                    case 8:
+                        dist = 5;
+                        break;
+                }
+                break;
+            }
+        }
+
+
+        boolean flag = false;
+        int m = 0;
+        int tolerance =  10;
+        while(m < dist*2) {
+            l += addx/2;
+            y += addy/2;
+
+            for (int p = 0; p < 6; p++) {
+
+                if (Math.abs(s[p].getTranslateX() - Ray.getEndX()) <= tolerance && Math.abs(Ray.getEndY() - s[p].getTranslateY()) <= tolerance) {
+                    entries[i].setFill(Color.RED);
+                    flag = true;
+                    break;
+                }
+            }
+
+                if (flag) {
+                    break;
+                }
+                Ray.setEndX(l);
+                Ray.setEndY(y);
+                m++;
+            }
+
+        if(!flag) {
+            entries[dest - 1].setFill(Color.LIMEGREEN);
+            entries[i].setFill(Color.LIMEGREEN);
+        }
+        Ray.setVisible(false);
+        return Ray;
+        }
+
+
+
 
     private void ShowAtoms(Sphere[] s, Circle[] c)
     {
