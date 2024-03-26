@@ -178,14 +178,7 @@ public class HexagonExample extends Application {
             } while (repeat);
             randNum[i] = tempRandNum; // storing the random number in the array
         } // loop to print out the 6 circles of influence
-        for(int z = 0; z < 6; z++)
-        {
-            Circle COI = createCircleOfInfluence();
-            COI.setLayoutX(xyLocation[0][randNum[z]]); // getting the x location of the random numbers chosen
-            COI.setLayoutY(xyLocation[1][randNum[z]]); // getting the y location of the random numbers chosen
-            COIs[z] = COI;
-            root.getChildren().add(COI);
-        }
+
         for(int z = 0; z < 6; z++) // loop to print out the 6 atoms
         {
             Sphere atom = createAtom();
@@ -197,6 +190,15 @@ public class HexagonExample extends Application {
             atom.setTranslateY(xyLocation[1][randNum[z]]); // getting the y location of the random numbers chosen
             atoms[z] = atom;
             root.getChildren().add(atom);
+        }
+
+        for(int z = 0; z < 6; z++)
+        {
+            Circle COI = createCircleOfInfluence();
+            COI.setCenterX(atoms[z].getTranslateX()); // getting the x location of the random numbers chosen
+            COI.setCenterY(atoms[z].getTranslateY()); // getting the y location of the random numbers chosen
+            COIs[z] = COI;
+            root.getChildren().add(COI);
         }
 
         Circle[] entries = new Circle[54];
@@ -323,36 +325,19 @@ public class HexagonExample extends Application {
                 addx = 88;
                 addy = 0;
                 dest = arr2[w];
-                switch(w) //Determines distance
+                dist = switch (w) //Determines distance
                 {
-                    case 0:
-                        dist = 5;
-                        break;
-                    case 1:
-                        dist = 6;
-                        break;
-                    case 2:
-                        dist = 7;
-                        break;
-                    case 3:
-                        dist = 8;
-                        break;
-                    case 4:
-                        dist = 9;
-                        break;
-                    case 5:
-                        dist = 8;
-                        break;
-                    case 6:
-                        dist = 7;
-                        break;
-                    case 7:
-                        dist = 6;
-                        break;
-                    case 8:
-                        dist = 5;
-                        break;
-                }
+                    case 0 -> 5;
+                    case 1 -> 6;
+                    case 2 -> 7;
+                    case 3 -> 8;
+                    case 4 -> 9;
+                    case 5 -> 8;
+                    case 6 -> 7;
+                    case 7 -> 6;
+                    case 8 -> 5;
+                    default -> dist;
+                };
 
                 break;
             }
@@ -361,36 +346,19 @@ public class HexagonExample extends Application {
                 addy = 0;
                 addx = -88;
                 dest = arr1[w];
-                switch(w) //Determines distance
+                dist = switch (w) //Determines distance
                 {
-                    case 0:
-                        dist = 5;
-                        break;
-                    case 1:
-                        dist = 6;
-                        break;
-                    case 2:
-                        dist = 7;
-                        break;
-                    case 3:
-                        dist = 8;
-                        break;
-                    case 4:
-                        dist = 9;
-                        break;
-                    case 5:
-                        dist = 8;
-                        break;
-                    case 6:
-                        dist = 7;
-                        break;
-                    case 7:
-                        dist = 6;
-                        break;
-                    case 8:
-                        dist = 5;
-                        break;
-                }
+                    case 0 -> 5;
+                    case 1 -> 6;
+                    case 2 -> 7;
+                    case 3 -> 8;
+                    case 4 -> 9;
+                    case 5 -> 8;
+                    case 6 -> 7;
+                    case 7 -> 6;
+                    case 8 -> 5;
+                    default -> dist;
+                };
                 break;
             }
             if(arr3[w] == x)
@@ -398,36 +366,19 @@ public class HexagonExample extends Application {
                 addy = ((2 * Math.sqrt(1875)) * -1) * Math.sin(Math.PI /3);
                 addx = Math.sqrt(1875) * -1;
                 dest = arr6[w];
-                switch(w) //Determines distance
+                dist = switch (w) //Determines distance
                 {
-                    case 0:
-                        dist = 9;
-                        break;
-                    case 1:
-                        dist = 8;
-                        break;
-                    case 2:
-                        dist = 7;
-                        break;
-                    case 3:
-                        dist = 6;
-                        break;
-                    case 4:
-                        dist = 5;
-                        break;
-                    case 5:
-                        dist = 8;
-                        break;
-                    case 6:
-                        dist = 7;
-                        break;
-                    case 7:
-                        dist = 6;
-                        break;
-                    case 8:
-                        dist = 5;
-                        break;
-                }
+                    case 0 -> 9;
+                    case 1 -> 8;
+                    case 2 -> 7;
+                    case 3 -> 6;
+                    case 4 -> 5;
+                    case 5 -> 8;
+                    case 6 -> 7;
+                    case 7 -> 6;
+                    case 8 -> 5;
+                    default -> dist;
+                };
                 break;
             }
             if(arr4[w] == x)
@@ -435,36 +386,19 @@ public class HexagonExample extends Application {
                 addx = Math.sqrt(1875) * -1;
                 addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI /3);
                 dest = arr5[w];
-                switch(w) //Determines distance
+                dist = switch (w) //Determines distance
                 {
-                    case 0:
-                        dist = 5;
-                        break;
-                    case 1:
-                        dist = 6;
-                        break;
-                    case 2:
-                        dist = 7;
-                        break;
-                    case 3:
-                        dist = 8;
-                        break;
-                    case 4:
-                        dist = 9;
-                        break;
-                    case 5:
-                        dist = 8;
-                        break;
-                    case 6:
-                        dist = 7;
-                        break;
-                    case 7:
-                        dist = 6;
-                        break;
-                    case 8:
-                        dist = 5;
-                        break;
-                }
+                    case 0 -> 5;
+                    case 1 -> 6;
+                    case 2 -> 7;
+                    case 3 -> 8;
+                    case 4 -> 9;
+                    case 5 -> 8;
+                    case 6 -> 7;
+                    case 7 -> 6;
+                    case 8 -> 5;
+                    default -> dist;
+                };
                 break;
             }
             if(arr5[w] == x)
@@ -472,36 +406,19 @@ public class HexagonExample extends Application {
                 addx = Math.sqrt(1875);
                 addy = ((2 * Math.sqrt(1875)) * -1)  * Math.sin(Math.PI /3);
                 dest = arr4[w];
-                switch(w) //Determines distance
+                dist = switch (w) //Determines distance
                 {
-                    case 0:
-                        dist = 5;
-                        break;
-                    case 1:
-                        dist = 6;
-                        break;
-                    case 2:
-                        dist = 7;
-                        break;
-                    case 3:
-                        dist = 8;
-                        break;
-                    case 4:
-                        dist = 9;
-                        break;
-                    case 5:
-                        dist = 8;
-                        break;
-                    case 6:
-                        dist = 7;
-                        break;
-                    case 7:
-                        dist = 6;
-                        break;
-                    case 8:
-                        dist = 5;
-                        break;
-                }
+                    case 0 -> 5;
+                    case 1 -> 6;
+                    case 2 -> 7;
+                    case 3 -> 8;
+                    case 4 -> 9;
+                    case 5 -> 8;
+                    case 6 -> 7;
+                    case 7 -> 6;
+                    case 8 -> 5;
+                    default -> dist;
+                };
                 break;
             }
             if(arr6[w] == x)
@@ -509,36 +426,19 @@ public class HexagonExample extends Application {
                 addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3);
                 addx = Math.sqrt(1875);
                 dest = arr3[w];
-                switch(w) //Determines distance
+                dist = switch (w) //Determines distance
                 {
-                    case 0:
-                        dist = 9;
-                        break;
-                    case 1:
-                        dist = 8;
-                        break;
-                    case 2:
-                        dist = 7;
-                        break;
-                    case 3:
-                        dist = 6;
-                        break;
-                    case 4:
-                        dist = 5;
-                        break;
-                    case 5:
-                        dist = 8;
-                        break;
-                    case 6:
-                        dist = 7;
-                        break;
-                    case 7:
-                        dist = 6;
-                        break;
-                    case 8:
-                        dist = 5;
-                        break;
-                }
+                    case 0 -> 9;
+                    case 1 -> 8;
+                    case 2 -> 7;
+                    case 3 -> 6;
+                    case 4 -> 5;
+                    case 5 -> 8;
+                    case 6 -> 7;
+                    case 7 -> 6;
+                    case 8 -> 5;
+                    default -> dist;
+                };
                 break;
             }
         }
@@ -558,6 +458,14 @@ public class HexagonExample extends Application {
                     flag = true;
                     break;
                 }
+
+                if(TouchesEdgeCircle(c[p], Ray))
+                {
+                    entries[i].setFill(Color.BLUE);
+                    entries[dest-1].setFill(Color.BLUE);
+                    flag = true;
+                    break;
+                }
             }
 
                 if (flag) {
@@ -571,12 +479,25 @@ public class HexagonExample extends Application {
         if(!flag) {
             entries[dest - 1].setFill(Color.LIMEGREEN);
             entries[i].setFill(Color.LIMEGREEN);
+            entries[dest-1].setMouseTransparent(true);
         }
-        Ray.setVisible(false);
+        //Ray.setVisible(false);
         return Ray;
         }
 
+        boolean TouchesEdgeCircle(Circle c, Line ray)
+        {
+            double tolerance = 0;
+            return Math.abs(distance(ray.getEndX(), ray.getEndY(), c.getCenterX(), c.getCenterY()) - 85.0f) <= tolerance;
+        }
 
+
+        double distance(double x1, double y1, double x2, double y2)
+        {
+            double x3 = x2-x1;
+            double y3 = y2-y1;
+            return Math.hypot(x3, y3);
+        }
 
 
     private void ShowAtoms(Sphere[] s, Circle[] c)
