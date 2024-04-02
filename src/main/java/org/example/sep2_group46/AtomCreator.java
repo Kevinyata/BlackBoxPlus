@@ -7,14 +7,12 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Sphere;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class AtomCreator {
 
     private final ArrayList<Circle> CirclesofInfluence;
     private final ArrayList<Sphere> Molecule;
     private final double[][] xyLocation;
-
 
     public AtomCreator(double[][] xyLocation)
     {
@@ -25,7 +23,7 @@ public class AtomCreator {
 
     public void createAtoms(Pane Board, int[] RandomXY)
     {
-        for(int i =0; i < 6; i++) {
+        for(int i = 0; i < 6; i++) {
             Circle COI = createCircleofInfluence();
             COI.setCenterX(xyLocation[0][RandomXY[i]]);
             COI.setCenterY(xyLocation[1][RandomXY[i]]);
@@ -43,6 +41,19 @@ public class AtomCreator {
             COI.setVisible(false);
             molecule.setVisible(false);
         }
+    }
+
+    public void HexagonsCOIsInfluence(int HexagonLocation, int AtomNumber)
+    {
+
+    }
+
+    public ArrayList<Circle> getCirclesofInfluence() {
+        return CirclesofInfluence;
+    }
+
+    public ArrayList<Sphere> getMolecule() {
+        return Molecule;
     }
 
     public Circle createCircleofInfluence()
