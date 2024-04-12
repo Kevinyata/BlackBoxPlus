@@ -145,7 +145,7 @@ public class RayPath {
                 addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3);
                 addx = Math.sqrt(1875);
             }
-            //else if(addx < 0 && ray hits bottom left or top left)
+            //else if(addx < 0 && ray hits bottom left)
             {
                 addy = 0;
                 addx = -88;
@@ -155,7 +155,7 @@ public class RayPath {
                 addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3);
                 addx = Math.sqrt(1875) * -1;
             }
-            //else if(addx > 0 && ray hits bottom right or top right)
+            //else if(addx > 0 && ray hits bottom right)
             {
                 addy = 0;
                 addx = 88;
@@ -165,10 +165,20 @@ public class RayPath {
                 addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3) * -1;
                 addx = Math.sqrt(1875);
             }
+            //else if(addx < 0 && ray hits top left)
+            {
+                addy = 0;
+                addx = -88;
+            }
             //else if(addx < 0 && ray hits top right)
             {
                 addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3) * -1;
                 addx = Math.sqrt(1875) * -1;
+            }
+            //else if(addx > 0 && ray hits top right)
+            {
+                addy = 0;
+                addx = 88;
             }
             //else if(addy > 0 && ray hits left)
             {
@@ -185,7 +195,7 @@ public class RayPath {
                 addx = Math.sqrt(1875) * -1;
                 addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI /3) * -1;
             }
-            //else if(addy < 0 && ray hits left)
+            //else if(addy < 0 && ray hits right)
             {
                 addx = Math.sqrt(1875);
                 addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI /3) * -1;
@@ -194,8 +204,79 @@ public class RayPath {
 
         //if(two circles of influence are detected)
         {
-            //if()
-
+            //if(addx > 0 && addy == 0 && ray hits top left && bottom left)
+            {
+                addx = -88;
+            }
+            //if(addx < 0 && addy == 0 && ray hits top right && bottom right)
+            {
+                addx = 88;
+            }
+            //if(addx < 0 && addy == 0 && ray hits bottom right && right)
+            {
+                addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3);
+                addx = Math.sqrt(1875);
+            }
+            //if(addx < 0 && addy < 0 && ray hits bottom right && right)
+            {
+                addy = 0;
+                addx = 88;
+            }
+            //if(addx > 0 && addy == 0 && ray hits top left && left)
+            {
+                addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3) * -1;
+                addx = Math.sqrt(1875) * -1;
+            }
+            //if(addx > 0 && addy > 0 && ray hits top left && left)
+            {
+                addy = 0;
+                addx = -88;
+            }
+            //if(addx > 0 && addy == 0 && ray hits bottom left && left)
+            {
+                addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3);
+                addx = Math.sqrt(1875) * -1;
+            }
+            //if(addx > 0 && addy < 0 && ray hits bottom left && left)
+            {
+                addy = 0;
+                addx = -88;
+            }
+            //if(addx < 0 && addy == 0 && ray hits top right && right)
+            {
+                addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3) * -1;
+                addx = Math.sqrt(1875);
+            }
+            //if(addx < 0 && addy > 0 && ray hits top right && right)
+            {
+                addy = 0;
+                addx = 88;
+            }
+            //if(addx > 0 && ray hits top right && top left)
+            {
+                addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3) * -1;
+                addx = Math.sqrt(1875);
+            }
+            //if(addx < 0 && ray hits top right && top left)
+            {
+                addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3) * -1;
+                addx = Math.sqrt(1875) * -1;
+            }
+            //if(addx > 0 && ray hits bottom right && bottom left)
+            {
+                addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3);
+                addx = Math.sqrt(1875);
+            }
+            //if(addx < 0 && ray hits bottom right && bottom left)
+            {
+                addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3);
+                addx = Math.sqrt(1875) * -1;
+            }
+            //if((hit top left && bottom right) || (hit bottom left && top right))
+            {
+                addx = addx * -1;
+                addy = addy * -1;
+            }
         }
 
         //if(three circles of influence are detected)
