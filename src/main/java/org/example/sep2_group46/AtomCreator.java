@@ -57,47 +57,51 @@ public class AtomCreator {
 
         if(HexagonLocation == 1)
         {
-            COIHexagonIndx[AtomNumber][1] = 0;
+            COIHexagonIndx[AtomNumber][0] = HexagonLocation+1;
             COIHexagonIndx[AtomNumber][4] = 6;
             COIHexagonIndx[AtomNumber][5] = 7;
         }
         else if(HexagonLocation == 5)
         {
-            COIHexagonIndx[AtomNumber][0] = 0;
+            COIHexagonIndx[AtomNumber][1] = HexagonLocation-1;
             COIHexagonIndx[AtomNumber][4] = 10;
             COIHexagonIndx[AtomNumber][5] = 11;
         }
         else if(HexagonLocation == 57){
-            COIHexagonIndx[AtomNumber][1] = 0;
+            COIHexagonIndx[AtomNumber][0] = HexagonLocation+1;
             COIHexagonIndx[AtomNumber][2] = 51;
             COIHexagonIndx[AtomNumber][3] = 52;
         }
         else if(HexagonLocation == 61){
-            COIHexagonIndx[AtomNumber][0] = 0;
+            COIHexagonIndx[AtomNumber][1] = HexagonLocation-1;
             COIHexagonIndx[AtomNumber][2] = 55;
             COIHexagonIndx[AtomNumber][3] = 56;
         }
         else if(HexagonLocation == 27) {
-            COIHexagonIndx[AtomNumber][1] = 0;
+            COIHexagonIndx[AtomNumber][0] = HexagonLocation+1;
             COIHexagonIndx[AtomNumber][3] = 19;
             COIHexagonIndx[AtomNumber][5] = 36;
         }
         else if(HexagonLocation == 35) {
-            COIHexagonIndx[AtomNumber][0] = 0;
+            COIHexagonIndx[AtomNumber][1] = HexagonLocation-1;
             COIHexagonIndx[AtomNumber][3] = 26;
             COIHexagonIndx[AtomNumber][5] = 43;
         }
         else if(HexagonLocation > 1 && HexagonLocation < 5) {
+            COIHexagonIndx[AtomNumber][0] = HexagonLocation+1;
+            COIHexagonIndx[AtomNumber][1] = HexagonLocation-1;
             COIHexagonIndx[AtomNumber][4] = HexagonLocation+5;
             COIHexagonIndx[AtomNumber][5] = HexagonLocation+6;
         }
         else if(HexagonLocation > 57 && HexagonLocation < 61) {
+            COIHexagonIndx[AtomNumber][0] = HexagonLocation+1;
+            COIHexagonIndx[AtomNumber][1] = HexagonLocation-1;
             COIHexagonIndx[AtomNumber][2] = HexagonLocation-5;
             COIHexagonIndx[AtomNumber][3] = HexagonLocation-6;
         }
         else if(HexagonLocation == 12 || HexagonLocation == 6 || HexagonLocation == 19) {
             int index = Arrays.binarySearch(LeftEdgeLocations, HexagonLocation);
-            COIHexagonIndx[AtomNumber][1] = 0;
+            COIHexagonIndx[AtomNumber][0] = HexagonLocation+1;
             COIHexagonIndx[AtomNumber][3] = LeftEdgeLocations[index-1];
             COIHexagonIndx[AtomNumber][4] = LeftEdgeLocations[index+1];
             COIHexagonIndx[AtomNumber][5] = LeftEdgeLocations[index+1] + 1;
@@ -105,7 +109,7 @@ public class AtomCreator {
         else if(HexagonLocation == 11 || HexagonLocation == 18 || HexagonLocation == 26)
         {
             int index = Arrays.binarySearch(RightEdgeLocations, HexagonLocation);
-            COIHexagonIndx[AtomNumber][0] = 0;
+            COIHexagonIndx[AtomNumber][1] = HexagonLocation-1;
             COIHexagonIndx[AtomNumber][2] = RightEdgeLocations[index-1];
             COIHexagonIndx[AtomNumber][4] = RightEdgeLocations[index+1];
             COIHexagonIndx[AtomNumber][5] = RightEdgeLocations[index+1] - 1;
@@ -113,7 +117,7 @@ public class AtomCreator {
         else if(HexagonLocation == 36 || HexagonLocation ==  44 || HexagonLocation == 51)
         {
             int index = Arrays.binarySearch(LeftEdgeLocations, HexagonLocation);
-            COIHexagonIndx[AtomNumber][1] = 0;
+            COIHexagonIndx[AtomNumber][0] = HexagonLocation+1;
             COIHexagonIndx[AtomNumber][5] = LeftEdgeLocations[index+1];
             COIHexagonIndx[AtomNumber][2] = LeftEdgeLocations[index-1];
             COIHexagonIndx[AtomNumber][3] = LeftEdgeLocations[index-1] + 1;
@@ -121,24 +125,26 @@ public class AtomCreator {
         else if(HexagonLocation == 43 || HexagonLocation == 50 || HexagonLocation == 56)
         {
             int index = Arrays.binarySearch(RightEdgeLocations, HexagonLocation);
-            COIHexagonIndx[AtomNumber][0] = 0;
+            COIHexagonIndx[AtomNumber][1] = HexagonLocation-1;
             COIHexagonIndx[AtomNumber][4] = RightEdgeLocations[index+1];
             COIHexagonIndx[AtomNumber][2] = RightEdgeLocations[index-1];
             COIHexagonIndx[AtomNumber][3] = RightEdgeLocations[index-1] - 1;
         }
         else
         {
+            COIHexagonIndx[AtomNumber][0] = HexagonLocation+1;
+            COIHexagonIndx[AtomNumber][1] = HexagonLocation-1;
             for(int i = 1; i < 8; i++)
             {
                 if(HexagonLocation > LeftEdgeLocations[i] && HexagonLocation < RightEdgeLocations[i])
                 {
                     int numHexagonsOnCurrRow = RightEdgeLocations[i] - LeftEdgeLocations[i];
                     int numHexagonsOnPrevRow = RightEdgeLocations[i-1] - LeftEdgeLocations[i-1];
-                    int numHexagonsOnNextRow = RightEdgeLocations[i+1] + LeftEdgeLocations[i+1];
+                    int numHexagonsOnNextRow = RightEdgeLocations[i+1] - LeftEdgeLocations[i+1];
 
                     if(numHexagonsOnPrevRow > numHexagonsOnCurrRow)
                     {
-                        COIHexagonIndx[AtomNumber][2] = (HexagonLocation - numHexagonsOnPrevRow) - 1;
+                        COIHexagonIndx[AtomNumber][2] = (HexagonLocation - numHexagonsOnCurrRow) - 1;
                         COIHexagonIndx[AtomNumber][3] = COIHexagonIndx[AtomNumber][2] + 1;
                     }
                     else if(numHexagonsOnPrevRow < numHexagonsOnCurrRow)
@@ -148,14 +154,15 @@ public class AtomCreator {
                     }
 
                     if(numHexagonsOnNextRow < numHexagonsOnCurrRow) {
-                        COIHexagonIndx[AtomNumber][4] = (HexagonLocation + numHexagonsOnNextRow)-1;
+                        COIHexagonIndx[AtomNumber][4] = (HexagonLocation + numHexagonsOnCurrRow);
                         COIHexagonIndx[AtomNumber][5] = COIHexagonIndx[AtomNumber][4] + 1;
                     }
                     else if(numHexagonsOnNextRow > numHexagonsOnCurrRow)
                     {
-                        COIHexagonIndx[AtomNumber][4] = (HexagonLocation + numHexagonsOnCurrRow) + 1;
+                        COIHexagonIndx[AtomNumber][4] = (HexagonLocation + numHexagonsOnNextRow);
                         COIHexagonIndx[AtomNumber][5] = COIHexagonIndx[AtomNumber][4] + 1;
                     }
+                    break;
                 }
             }
             for(int i = 0; i < 6; i++) {

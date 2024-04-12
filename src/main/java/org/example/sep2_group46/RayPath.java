@@ -52,29 +52,31 @@ public class RayPath {
                 boolean isAbsorbed = Math.abs(Molecule[p].getTranslateX() - (Rays.get(index).getEndX() + addx)) <= tolerance && Math.abs((addy + Rays.get(index).getEndY()) - Molecule[p].getTranslateY()) <= tolerance;
                 if (isAbsorbed) {
                     entries[EntryNum].setFill(Color.RED);
-                    Rays.get(index).setEndX(x + addx/2);
-                    Rays.get(index).setEndY(y + addy/2);
+                    Rays.get(index).setEndX(x + addx / 2);
+                    Rays.get(index).setEndY(y + addy / 2);
                     Board.getChildren().add(Rays.get(index));
                     return;
                 }
+            }
 
+            for (int p = 0; p < 6; p++) {
                 for (int q = 0; q < 6; q++) {
                     //System.out.print(COIHexagonIndex[p][q] + " ");
                     boolean isDeflected = COIHexagonIndex[p][q] != 0 && Math.abs(xyCoord[0][COIHexagonIndex[p][q]] - Rays.get(index).getEndX()) <= tolerance && Math.abs(xyCoord[1][COIHexagonIndex[p][q]] - Rays.get(index).getEndY()) <= tolerance;
 
                     if (isDeflected) {
-                        int key = COIHexagonIndex[p][q];
-                        Board.getChildren().add(Rays.get(index));
 
-                        Vel = deflectRay(addx, addy, COIHexagonIndex, key, p);
+                        Board.getChildren().add(Rays.get(index));
+                        System.out.println(p);
+                        Vel = deflectRay(addx, addy, p, CountOccurences(COIHexagonIndex, COIHexagonIndex[p][q]));
                         addy = Vel[1];
                         addx = Vel[0];
 
                         Rays.add(new Line());
                         index++;
 
-                        Rays.get(index).setStartX(Rays.get(index-1).getEndX());
-                        Rays.get(index).setStartY(Rays.get(index-1).getEndY());
+                        Rays.get(index).setStartX(Rays.get(index - 1).getEndX());
+                        Rays.get(index).setStartY(Rays.get(index - 1).getEndY());
                         Rays.get(index).setStrokeWidth(2);
                         Rays.get(index).setStroke(Color.WHITE);
                         Rays.get(index).setFill(Color.WHITE);
@@ -82,12 +84,14 @@ public class RayPath {
                 }
             }
 
+
             x += addx / 2;
             y += addy / 2;
             Rays.get(index).setEndX(x);
             Rays.get(index).setEndY(y);
             m++;
         }
+
 
 //        if(!flag) {
 //            entries[dest - 1].setFill(Color.LIMEGREEN);
@@ -110,160 +114,153 @@ public class RayPath {
         return count;
     }
 
-    public double[] deflectRay(double addx, double addy, int[][] COIHexagonIndex, int key, int indx) {
-        int CirclesOfInfluenceHit = CountOccurences(COIHexagonIndex, key);
-        int right = COIHexagonIndex[indx][0];
-        int left = COIHexagonIndex[indx][1];
-        int tl = COIHexagonIndex[indx][2];
-        int tr = COIHexagonIndex[indx][3];
-        int bl = COIHexagonIndex[indx][4];
-        int br = COIHexagonIndex[indx][5];
+    public double[] deflectRay(double addx, double addy, int indx, int count) {
         double[] Vel = new double[2];
-        if (CirclesOfInfluenceHit == 1){
-            if(addx > 0 && key == bl)
+        if (count == 1){
+            if(addx > 0 && indx == 4)
             {
                 addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3);
                 addx = Math.sqrt(1875);
             }
-            else if(addx < 0 && key == bl)
+            else if(addx < 0 && indx == 4)
             {
                 addy = 0;
                 addx = -88;
             }
-            else if(addx < 0 && key == br)
+            else if(addx < 0 && indx == 5)
             {
                 addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3);
                 addx = Math.sqrt(1875) * -1;
             }
-            else if(addx > 0 && key == br)
+            else if(addx > 0 && indx == 5)
             {
                 addy = 0;
                 addx = 88;
             }
-            else if(addx > 0 && key == tl)
+            else if(addx > 0 && indx == 2)
             {
                 addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3) * -1;
                 addx = Math.sqrt(1875);
             }
-            else if(addx < 0 && key == tl)
+            else if(addx < 0 && indx == 2)
             {
                 addy = 0;
                 addx = -88;
             }
-            else if(addx < 0 && key == tr)
+            else if(addx < 0 && indx == 3)
             {
                 addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3) * -1;
                 addx = Math.sqrt(1875) * -1;
             }
-            else if(addx > 0 && key == tr)
+            else if(addx > 0 && indx == 3)
             {
                 addy = 0;
                 addx = 88;
             }
-            else if(addy > 0 && key == left)
+            else if(addy > 0 && indx == 1)
             {
                 addx = Math.sqrt(1875) * -1;
                 addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI /3);
             }
-            else if(addy > 0 && key == right)
+            else if(addy > 0 && indx == 0)
             {
                 addx = Math.sqrt(1875);
                 addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI /3);
             }
-            else if(addy < 0 && key == left)
+            else if(addy < 0 && indx == 1)
             {
                 addx = Math.sqrt(1875) * -1;
                 addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI /3) * -1;
             }
-            else if(addy < 0 && key == right)
+            else if(addy < 0 && indx == 0)
             {
                 addx = Math.sqrt(1875);
                 addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI /3) * -1;
             }
         }
-
-        //if(two circles of influence are detected)
-        {
-            //if(addx > 0 && addy == 0 && ray hits top left && bottom left)
-            {
-                addx = -88;
-            }
-            //if(addx < 0 && addy == 0 && ray hits top right && bottom right)
-            {
-                addx = 88;
-            }
-            //if(addx < 0 && addy == 0 && ray hits bottom right && right)
-            {
-                addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3);
-                addx = Math.sqrt(1875);
-            }
-            //if(addx < 0 && addy < 0 && ray hits bottom right && right)
-            {
-                addy = 0;
-                addx = 88;
-            }
-            //if(addx > 0 && addy == 0 && ray hits top left && left)
-            {
-                addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3) * -1;
-                addx = Math.sqrt(1875) * -1;
-            }
-            //if(addx > 0 && addy > 0 && ray hits top left && left)
-            {
-                addy = 0;
-                addx = -88;
-            }
-            //if(addx > 0 && addy == 0 && ray hits bottom left && left)
-            {
-                addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3);
-                addx = Math.sqrt(1875) * -1;
-            }
-            //if(addx > 0 && addy < 0 && ray hits bottom left && left)
-            {
-                addy = 0;
-                addx = -88;
-            }
-            //if(addx < 0 && addy == 0 && ray hits top right && right)
-            {
-                addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3) * -1;
-                addx = Math.sqrt(1875);
-            }
-            //if(addx < 0 && addy > 0 && ray hits top right && right)
-            {
-                addy = 0;
-                addx = 88;
-            }
-            //if(addx > 0 && ray hits top right && top left)
-            {
-                addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3) * -1;
-                addx = Math.sqrt(1875);
-            }
-            //if(addx < 0 && ray hits top right && top left)
-            {
-                addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3) * -1;
-                addx = Math.sqrt(1875) * -1;
-            }
-            //if(addx > 0 && ray hits bottom right && bottom left)
-            {
-                addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3);
-                addx = Math.sqrt(1875);
-            }
-            //if(addx < 0 && ray hits bottom right && bottom left)
-            {
-                addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3);
-                addx = Math.sqrt(1875) * -1;
-            }
-            //if((hit top left && bottom right) || (hit bottom left && top right))
-            {
-                addx = addx * -1;
-                addy = addy * -1;
-            }
-        }
-
-        //if(three circles of influence are detected)
-        {
-            addx = addx * -1;
-            addy = addy * -1;
-        }
+//
+//        //if(two circles of influence are detected)
+//        {
+//            //if(addx > 0 && addy == 0 && ray hits top left && bottom left)
+//            {
+//                addx = -88;
+//            }
+//            //if(addx < 0 && addy == 0 && ray hits top right && bottom right)
+//            {
+//                addx = 88;
+//            }
+//            //if(addx < 0 && addy == 0 && ray hits bottom right && right)
+//            {
+//                addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3);
+//                addx = Math.sqrt(1875);
+//            }
+//            //if(addx < 0 && addy < 0 && ray hits bottom right && right)
+//            {
+//                addy = 0;
+//                addx = 88;
+//            }
+//            //if(addx > 0 && addy == 0 && ray hits top left && left)
+//            {
+//                addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3) * -1;
+//                addx = Math.sqrt(1875) * -1;
+//            }
+//            //if(addx > 0 && addy > 0 && ray hits top left && left)
+//            {
+//                addy = 0;
+//                addx = -88;
+//            }
+//            //if(addx > 0 && addy == 0 && ray hits bottom left && left)
+//            {
+//                addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3);
+//                addx = Math.sqrt(1875) * -1;
+//            }
+//            //if(addx > 0 && addy < 0 && ray hits bottom left && left)
+//            {
+//                addy = 0;
+//                addx = -88;
+//            }
+//            //if(addx < 0 && addy == 0 && ray hits top right && right)
+//            {
+//                addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3) * -1;
+//                addx = Math.sqrt(1875);
+//            }
+//            //if(addx < 0 && addy > 0 && ray hits top right && right)
+//            {
+//                addy = 0;
+//                addx = 88;
+//            }
+//            //if(addx > 0 && ray hits top right && top left)
+//            {
+//                addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3) * -1;
+//                addx = Math.sqrt(1875);
+//            }
+//            //if(addx < 0 && ray hits top right && top left)
+//            {
+//                addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3) * -1;
+//                addx = Math.sqrt(1875) * -1;
+//            }
+//            //if(addx > 0 && ray hits bottom right && bottom left)
+//            {
+//                addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3);
+//                addx = Math.sqrt(1875);
+//            }
+//            //if(addx < 0 && ray hits bottom right && bottom left)
+//            {
+//                addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3);
+//                addx = Math.sqrt(1875) * -1;
+//            }
+//            //if((hit top left && bottom right) || (hit bottom left && top right))
+//            {
+//                addx = addx * -1;
+//                addy = addy * -1;
+//            }
+        //}
+//
+//        //if(three circles of influence are detected)
+//        {
+//            addx = addx * -1;
+//            addy = addy * -1;
+//        }
 
         Vel[0] = addx;
         Vel[1] = addy;
