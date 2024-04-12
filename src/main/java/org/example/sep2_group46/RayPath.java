@@ -36,12 +36,12 @@ public class RayPath {
         double addx = 0;
         double addy = 0;
 
-        int[] arr1 = new int[]{1, 13, 17,21, 25, 31, 35, 39, 43};
-        int[] arr2 = new int[]{12, 16, 20, 24, 29, 33, 37, 41, 52};
-        int[] arr3 = new int[]{53, 42, 38, 34, 30, 50, 48, 46, 44};
-        int[] arr4 = new int[]{3,5,7,9,11,15,19,23,28};
-        int[] arr5 = new int[]{27, 32, 36, 40, 45, 47, 49, 51, 54};
-        int[] arr6 = new int[]{2,4,6, 8, 10, 14,18,22,26};
+        int[] arr1 = new int[]{1, 13, 17,21, 25, 31, 35, 39, 43}; // entry from the left
+        int[] arr2 = new int[]{12, 16, 20, 24, 29, 33, 37, 41, 52}; // entry from the right
+        int[] arr3 = new int[]{53, 42, 38, 34, 30, 50, 48, 46, 44}; // entry from the bottom right
+        int[] arr4 = new int[]{3,5,7,9,11,15,19,23,28}; // entry from the top right
+        int[] arr5 = new int[]{27, 32, 36, 40, 45, 47, 49, 51, 54}; // entry from the bottom left
+        int[] arr6 = new int[]{2,4,6, 8, 10, 14,18,22,26}; // entry from the top left
         int[] arr7 = new int[]{5,6,7,8,9,8,7,6,5};
         int[] arr8 = new int[]{9,8,7,6,5,8,7,6,5};
 
@@ -136,9 +136,72 @@ public class RayPath {
         Board.getChildren().add(Ray);
     }
 
-
-    public void deflectRay(Pane Board, int angle)
+    public void deflectRay(double addx, double addy , int atomLoc)
     {
+        //if(one circle of influence detected)
+        {
+            //if(addx > 0 && ray hits bottom left)
+            {
+                addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3);
+                addx = Math.sqrt(1875);
+            }
+            //else if(addx < 0 && ray hits bottom left or top left)
+            {
+                addy = 0;
+                addx = -88;
+            }
+            //else if(addx < 0 && ray hits bottom right)
+            {
+                addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3);
+                addx = Math.sqrt(1875) * -1;
+            }
+            //else if(addx > 0 && ray hits bottom right or top right)
+            {
+                addy = 0;
+                addx = 88;
+            }
+            //else if(addx > 0 && ray hits top left)
+            {
+                addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3) * -1;
+                addx = Math.sqrt(1875);
+            }
+            //else if(addx < 0 && ray hits top right)
+            {
+                addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3) * -1;
+                addx = Math.sqrt(1875) * -1;
+            }
+            //else if(addy > 0 && ray hits left)
+            {
+                addx = Math.sqrt(1875) * -1;
+                addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI /3);
+            }
+            //else if(addy > 0 && ray hits right)
+            {
+                addx = Math.sqrt(1875);
+                addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI /3);
+            }
+            //else if(addy < 0 && ray hits left)
+            {
+                addx = Math.sqrt(1875) * -1;
+                addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI /3) * -1;
+            }
+            //else if(addy < 0 && ray hits left)
+            {
+                addx = Math.sqrt(1875);
+                addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI /3) * -1;
+            }
+        }
 
+        //if(two circles of influence are detected)
+        {
+            //if()
+
+        }
+
+        //if(three circles of influence are detected)
+        {
+            addx = addx * -1;
+            addy = addy * -1;
+        }
     }
 }
