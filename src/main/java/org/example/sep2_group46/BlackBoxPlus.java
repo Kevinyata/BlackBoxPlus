@@ -26,7 +26,7 @@ public class BlackBoxPlus extends Application {
 
         RayEntry GameEntries = new RayEntry(GameBoard.getRayEntry());
         GameEntries.placeRayEntries(root);
-        GameEntries.EntryRayBuilder(root, GameAtoms.getMolecule(), GameAtoms.getCirclesofInfluence());
+        GameEntries.EntryRayBuilder(root, GameAtoms);
 
         createButton(root, GameAtoms);
 
@@ -39,21 +39,23 @@ public class BlackBoxPlus extends Application {
     private void createButton(Pane Board, AtomCreator atoms)
     {
         Button b = new Button();
-        b.setText("Show");
+        b.setText("Show Atoms");
+        b.setTextFill(Color.YELLOW);
+        b.setStyle("-fx-background-color: black;-fx-border-color: yellow; -fx-border-width: 2;");
         b.setLayoutX(1300);
         b.setLayoutY(680);
         b.setPrefSize(150, 50);
         b.setOnAction(actionEvent -> {
-            if(b.getText().equals("Show"))
+            if(b.getText().equals("Show Atoms"))
             {
                 //Shows atoms
                 atoms.ShowAtoms();
-                b.setText("Hide"); //Switches functionality to hide
+                b.setText("Hide Atoms"); //Switches functionality to hide
             }
-            else if(b.getText().equals("Hide")) {
+            else if(b.getText().equals("Hide Atoms")) {
                 //Hides atoms
                 atoms.HideAtoms();
-                b.setText("Show"); //Switches functionality to show
+                b.setText("Show Atoms"); //Switches functionality to show
             }
         });
         Board.getChildren().add(b);

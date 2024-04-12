@@ -6,7 +6,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 
 public class HexagonalBoardSetup {
-    private double[][] xyLocation = new double[2][62]; // double array used to store x and y location for atom and circle of influence placement
+    private final double[][] xyLocation = new double[2][62]; // double array used to store x and y location for atom and circle of influence placement
     private double XLoc = 570; //The initial X location before offset is applied
     private int numHexagons = 5; //The number of hexagons to print for each iteration of the inner loop
     final double OffsetX = 88; //The difference of X location for each row

@@ -3,13 +3,10 @@ package org.example.sep2_group46;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Sphere;
-
-import java.util.ArrayList;
 
 public class RayEntry {
     private final double[][] rayEntry; // double array to store the location of the ray entry points
-    private Circle[] entries = new Circle[54];
+    private final Circle[] entries = new Circle[54];
 
     public RayEntry(double[][] rayEntry)
     {
@@ -27,12 +24,12 @@ public class RayEntry {
         }
     }
 
-    public void EntryRayBuilder(Pane Board, ArrayList<Sphere> Molecule, ArrayList<Circle> CirclesofInfluence)
+    public void EntryRayBuilder(Pane Board, AtomCreator atomCreator)
     {
-        RayPath rays = new RayPath(rayEntry, Molecule, CirclesofInfluence);
+        RayPath rays = new RayPath(rayEntry);
         for(int entryNum = 0; entryNum < 54; entryNum++) {
             int finalEntryNum = entryNum;
-            entries[entryNum].setOnMouseClicked(mouseEvent -> rays.createRayPath(Board, finalEntryNum, entries));
+            entries[entryNum].setOnMouseClicked(mouseEvent -> rays.createRayPath(Board, finalEntryNum, entries, atomCreator));
         }
     }
 
@@ -41,7 +38,7 @@ public class RayEntry {
     {
         Circle entry = new Circle();
         entry.setRadius(4.0f);
-        entry.setFill(Color.WHITE);
+        entry.setFill(Color.YELLOW);
         return entry;
     }
 
