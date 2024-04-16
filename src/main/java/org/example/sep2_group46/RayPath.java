@@ -67,7 +67,9 @@ public class RayPath {
             //Checks if ray is absorbed
             for (int atomNumber = 0; atomNumber < 6; atomNumber++) {
                 //See if coordinates of endpoint of a line approximately matches the coordinates of the centre of the atom
-                boolean isAbsorbed = Math.abs(Molecule[atomNumber].getTranslateX() - Rays.get(index).getEndX()) <= AbsorptionTolerance && Math.abs(Rays.get(index).getEndY() - Molecule[atomNumber].getTranslateY()) <= AbsorptionTolerance;
+                boolean areXCoordinatesEqual = Math.abs(Molecule[atomNumber].getTranslateX() - Rays.get(index).getEndX()) <= AbsorptionTolerance;
+                boolean areYCoordinatesEqual = Math.abs(Rays.get(index).getEndY() - Molecule[atomNumber].getTranslateY()) <= AbsorptionTolerance;
+                boolean isAbsorbed = areXCoordinatesEqual && areYCoordinatesEqual;
                 if (isAbsorbed) {
                     entries[EntryNum].setFill(Color.RED);
                     Rays.get(index).setEndX(x + addToXCoordinates);
@@ -80,16 +82,20 @@ public class RayPath {
             //Checks if ray is deflected
             for (int atomNumber = 0; atomNumber < 6; atomNumber++) {
                 for (int adjacentHexagon = 0; adjacentHexagon < 6; adjacentHexagon++) {
-                   boolean isDeflected = COIHexagonIndex[atomNumber][adjacentHexagon] != 0 && Math.abs(xyCoordinates[0][COIHexagonIndex[atomNumber][adjacentHexagon]] - Rays.get(index).getEndX()) <= CircleOfInfluenceTolerance && Math.abs(xyCoordinates[1][COIHexagonIndex[atomNumber][adjacentHexagon]] - Rays.get(index).getEndY()) <= CircleOfInfluenceTolerance;
+                    boolean isAdjacentHexagonLocation = COIHexagonIndex[atomNumber][adjacentHexagon] != 0;
+                    boolean areXCoordinatesEqual = Math.abs(xyCoordinates[0][COIHexagonIndex[atomNumber][adjacentHexagon]] - Rays.get(index).getEndX()) <= CircleOfInfluenceTolerance;
+                    boolean areYCoordinatesEqual = Math.abs(xyCoordinates[1][COIHexagonIndex[atomNumber][adjacentHexagon]] - Rays.get(index).getEndY()) <= CircleOfInfluenceTolerance;
+                    boolean isDeflected = isAdjacentHexagonLocation && areXCoordinatesEqual && areYCoordinatesEqual;
                     if (isDeflected) {
-                        //counts if the ray hits 1,2 or 3 circles of influence
+
+                        //Checks if the ray hits 1,2 or 3 circles of influence
                         int count = countOccurrences(COIHexagonIndex, COIHexagonIndex[atomNumber][adjacentHexagon]);
 
                         //Adds previous ray to pane
                         Board.getChildren().add(Rays.get(index));
 
                         //For debugging
-                        System.out.println("Hexagon index: " + adjacentHexagon);
+                        System.out.println("\nHexagon index: " + adjacentHexagon);
                         System.out.println("count: " + count);
 
                         //Deflects ray appropriately and creates a new line to simulate that deflection
@@ -108,7 +114,6 @@ public class RayPath {
                     }
                 }
             }
-
 
             //Ray continues to travel until entry endpoint
             x += addToXCoordinates;
@@ -141,7 +146,8 @@ public class RayPath {
     public double[] deflectRay(double addToXCoordinates, double addToYCoordinates, int index, int count) {
         double[] Vel = new double[2];
         double directionY = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3);
-        if (count == 1){
+        if (count == 1) //ray hits 1 circle of influence
+        {
             if(addToXCoordinates > 0 && index == 2) //If ray hits bottom left
             {
                 addToYCoordinates = directionY;

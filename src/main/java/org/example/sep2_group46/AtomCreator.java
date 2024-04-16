@@ -74,8 +74,8 @@ public class AtomCreator {
         //[atomNumber][5] -> hexagon top right to hexagon atom is in
 
         //If an entry is 0 it means that that particular atom location's circle of influence doesn't touch that position adjacent to it
-        //So if entry 5 of atom 1 is empty it means that atom's circle of influence touches no hexagon top right to the  atom location
-        
+        //So if entry 5 of atom 1 is 0 it means that atom's circle of influence touches no hexagon top right to the  atom location
+
         if(hexagonLocation == 1)
         {
             COIHexagonIndex[atomNumber][1] = hexagonLocation+1;
@@ -112,28 +112,28 @@ public class AtomCreator {
             COIHexagonIndex[atomNumber][0] = hexagonLocation-1;
             COIHexagonIndex[atomNumber][1] = hexagonLocation+1;
             COIHexagonIndex[atomNumber][2] = hexagonLocation+5;
-            COIHexagonIndex[atomNumber][3] = hexagonLocation+6;
+            COIHexagonIndex[atomNumber][3] = COIHexagonIndex[atomNumber][2] + 1;
         }
         else if(hexagonLocation > 57 && hexagonLocation < 61) {
             COIHexagonIndex[atomNumber][0] = hexagonLocation-1;
             COIHexagonIndex[atomNumber][1] = hexagonLocation+1;
-            COIHexagonIndex[atomNumber][4] = hexagonLocation-5;
-            COIHexagonIndex[atomNumber][5] = hexagonLocation-6;
+            COIHexagonIndex[atomNumber][4] = hexagonLocation-6;
+            COIHexagonIndex[atomNumber][5] =  COIHexagonIndex[atomNumber][4] + 1;
         }
         else if(hexagonLocation == 12 || hexagonLocation == 6 || hexagonLocation == 19) {
             int index = Arrays.binarySearch(LeftEdgeLocations, hexagonLocation);
             COIHexagonIndex[atomNumber][1] = hexagonLocation+1;
-            COIHexagonIndex[atomNumber][5] = LeftEdgeLocations[index-1];
             COIHexagonIndex[atomNumber][2] = LeftEdgeLocations[index+1];
-            COIHexagonIndex[atomNumber][3] = LeftEdgeLocations[index+1] + 1;
+            COIHexagonIndex[atomNumber][3] = COIHexagonIndex[atomNumber][2] + 1;
+            COIHexagonIndex[atomNumber][5] = LeftEdgeLocations[index-1];
         }
         else if(hexagonLocation == 11 || hexagonLocation == 18 || hexagonLocation == 26)
         {
             int index = Arrays.binarySearch(RightEdgeLocations, hexagonLocation);
             COIHexagonIndex[atomNumber][0] = hexagonLocation-1;
+            COIHexagonIndex[atomNumber][2] = RightEdgeLocations[index+1] - 1;
+            COIHexagonIndex[atomNumber][3] = COIHexagonIndex[atomNumber][2]+1;
             COIHexagonIndex[atomNumber][4] = RightEdgeLocations[index-1];
-            COIHexagonIndex[atomNumber][2] = RightEdgeLocations[index+1];
-            COIHexagonIndex[atomNumber][3] = RightEdgeLocations[index+1] - 1;
         }
         else if(hexagonLocation == 36 || hexagonLocation ==  44 || hexagonLocation == 51)
         {
@@ -141,15 +141,15 @@ public class AtomCreator {
             COIHexagonIndex[atomNumber][1] = hexagonLocation+1;
             COIHexagonIndex[atomNumber][3] = LeftEdgeLocations[index+1];
             COIHexagonIndex[atomNumber][4] = LeftEdgeLocations[index-1];
-            COIHexagonIndex[atomNumber][5] = LeftEdgeLocations[index-1] + 1;
+            COIHexagonIndex[atomNumber][5] = COIHexagonIndex[atomNumber][4] + 1;
         }
         else if(hexagonLocation == 43 || hexagonLocation == 50 || hexagonLocation == 56)
         {
             int index = Arrays.binarySearch(RightEdgeLocations, hexagonLocation);
             COIHexagonIndex[atomNumber][0] = hexagonLocation-1;
             COIHexagonIndex[atomNumber][2] = RightEdgeLocations[index+1];
-            COIHexagonIndex[atomNumber][4] = RightEdgeLocations[index-1];
-            COIHexagonIndex[atomNumber][5] = RightEdgeLocations[index-1] - 1;
+            COIHexagonIndex[atomNumber][4] = RightEdgeLocations[index-1] - 1;
+            COIHexagonIndex[atomNumber][5] = COIHexagonIndex[atomNumber][4] + 1;
         }
         else //For hexagons location that aren't at the edge of the board
         {
@@ -159,34 +159,36 @@ public class AtomCreator {
             {
                 if(hexagonLocation > LeftEdgeLocations[i] && hexagonLocation < RightEdgeLocations[i])
                 {
-                    int numberOfHexagonsOnCurrentRow = RightEdgeLocations[i] - LeftEdgeLocations[i];
-                    int numberOfHexagonsOnPreviousRow = RightEdgeLocations[i-1] - LeftEdgeLocations[i-1];
-                    int numberOfHexagonsOnNextRow = RightEdgeLocations[i+1] - LeftEdgeLocations[i+1];
+                    int numberOfHexagonsOnCurrentRow = (RightEdgeLocations[i] - LeftEdgeLocations[i]) + 1;
+                    int numberOfHexagonsOnPreviousRow = (RightEdgeLocations[i-1] - LeftEdgeLocations[i-1]) + 1;
+                    int numberOfHexagonsOnNextRow = (RightEdgeLocations[i+1] - LeftEdgeLocations[i+1]) + 1;
 
-                    if(numberOfHexagonsOnPreviousRow > numberOfHexagonsOnCurrentRow)
+                    if(hexagonLocation < 27 && hexagonLocation > 7)
                     {
-                        COIHexagonIndex[atomNumber][2] = (hexagonLocation - numberOfHexagonsOnCurrentRow) - 1;
+                        COIHexagonIndex[atomNumber][2] = hexagonLocation + numberOfHexagonsOnCurrentRow;
                         COIHexagonIndex[atomNumber][3] = COIHexagonIndex[atomNumber][2] + 1;
-                    }
-                    else if(numberOfHexagonsOnPreviousRow < numberOfHexagonsOnCurrentRow)
-                    {
-                        COIHexagonIndex[atomNumber][2] = (hexagonLocation - numberOfHexagonsOnCurrentRow);
-                        COIHexagonIndex[atomNumber][3] = COIHexagonIndex[atomNumber][2] + 1;
-                    }
-
-                    if(numberOfHexagonsOnNextRow < numberOfHexagonsOnCurrentRow) {
-                        COIHexagonIndex[atomNumber][4] = (hexagonLocation + numberOfHexagonsOnNextRow);
+                        COIHexagonIndex[atomNumber][4] = hexagonLocation - numberOfHexagonsOnCurrentRow;
                         COIHexagonIndex[atomNumber][5] = COIHexagonIndex[atomNumber][4] + 1;
                     }
-                    else if(numberOfHexagonsOnNextRow > numberOfHexagonsOnCurrentRow)
+                    else if(hexagonLocation > 27 && hexagonLocation < 35)
                     {
-                        COIHexagonIndex[atomNumber][4] = (hexagonLocation + numberOfHexagonsOnCurrentRow);
+                        COIHexagonIndex[atomNumber][2] = hexagonLocation + 8;
+                        COIHexagonIndex[atomNumber][3] = COIHexagonIndex[atomNumber][2] + 1;
+                        COIHexagonIndex[atomNumber][4] = hexagonLocation - 9;
+                        COIHexagonIndex[atomNumber][5] = COIHexagonIndex[atomNumber][4] + 1;
+                    }
+                    else
+                    {
+                        COIHexagonIndex[atomNumber][2] = hexagonLocation + numberOfHexagonsOnNextRow;
+                        COIHexagonIndex[atomNumber][3] = COIHexagonIndex[atomNumber][2] + 1;
+                        COIHexagonIndex[atomNumber][4] = hexagonLocation - numberOfHexagonsOnPreviousRow;
                         COIHexagonIndex[atomNumber][5] = COIHexagonIndex[atomNumber][4] + 1;
                     }
                     break;
                 }
             }
         }
+
         //For debugging
         System.out.print("An atom located at Hexagonal Location " + hexagonLocation + " has its circle of influence touch hexagon locations:");
         for(int i = 0; i < 6; i++) {
