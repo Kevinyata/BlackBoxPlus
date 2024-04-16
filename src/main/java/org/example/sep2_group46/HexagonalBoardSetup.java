@@ -4,6 +4,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
+import javafx.scene.text.Font;
 
 public class HexagonalBoardSetup {
     private final double[][] xyLocation = new double[2][62]; // double array used to store x and y location for atom and circle of influence placement
@@ -15,7 +16,7 @@ public class HexagonalBoardSetup {
     private boolean methodCalled = false;
 
     double[][] rayEntry = new double[54][2]; // double array to store the location of the ray entry points
-    String[] rayLabels = new String[54]; // String array which stores the numbering values
+    String[] rayLabels = new String[61]; // String array which stores the numbering values
 
     public HexagonalBoardSetup() {
 
@@ -24,7 +25,7 @@ public class HexagonalBoardSetup {
     public void createHexagonalBoard(Pane Board) {
         if(!methodCalled) {
             // to store the values in the rayLabels array
-            for(int l = 0, m = 1; l < 54; l++, m++)
+            for(int l = 0, m = 1; l < 61; l++, m++)
             {
                 rayLabels[l] = String.valueOf(m);
             }
@@ -33,6 +34,7 @@ public class HexagonalBoardSetup {
             xyLocation[1][0] = -100;
             int j = 0;
             int k = 0;
+            int hexCounter = 0;
 
             while (j <= 57) {
                 for (int i = 0; i < numHexagons; i++) {
@@ -49,6 +51,22 @@ public class HexagonalBoardSetup {
 
                     xyLocation[0][i + j + 1] = XLoc + (OffsetX * i);
                     xyLocation[1][i + j + 1] = 200 + OffsetY;
+
+                    // Adding numbering for hexagons
+                    Label hexLabel = new Label(rayLabels[hexCounter]);
+                    if(hexCounter < 9)
+                    {
+                        hexLabel.setLayoutX(XLoc + (OffsetX * i) - 7);
+                    }
+                    else
+                    {
+                        hexLabel.setLayoutX(XLoc + (OffsetX * i) - 12);
+                    }
+                    hexLabel.setLayoutY(187 + OffsetY);
+                    hexLabel.setFont(new Font("Arial", 24));
+                    hexLabel.setTextFill(Color.GREY);
+                    hexLabel.setOpacity(0.5);
+                    hexCounter++;
 
                     //setting coordinates and labels of the entries coming from the left of the hexagons
                     if((i + j + 1) == 1 || (i + j + 1) == 6 || (i + j + 1) == 12 || (i + j + 1) == 19 || (i + j + 1) == 27 || (i + j + 1) == 36 || (i + j + 1) == 44 || (i + j + 1) == 51 || (i + j + 1) == 57)
@@ -123,6 +141,7 @@ public class HexagonalBoardSetup {
                         k++;
                     }
                     Board.getChildren().add(BoardHexagon);
+                    Board.getChildren().add(hexLabel);
                 }
                 j += numHexagons;
                 if (numHexagons == 9) {
@@ -174,18 +193,18 @@ public class HexagonalBoardSetup {
         return randNum;
     }
 
-        private Polygon createHexagon (double size){
-            Polygon hexagon = new Polygon();
+    private Polygon createHexagon (double size){
+        Polygon hexagon = new Polygon();
 
-            for (int i = 0; i < 6; i++) {
-                double angle = 2.0 * Math.PI * i / 6;
-                double x = size * Math.cos(angle);
-                double y = size * Math.sin(angle);
-                hexagon.getPoints().addAll(x, y);
-            }
-
-            return hexagon;
+        for (int i = 0; i < 6; i++) {
+            double angle = 2.0 * Math.PI * i / 6;
+            double x = size * Math.cos(angle);
+            double y = size * Math.sin(angle);
+            hexagon.getPoints().addAll(x, y);
         }
+
+        return hexagon;
+    }
 
     public double[][] getXyLocation() {
         return xyLocation;
