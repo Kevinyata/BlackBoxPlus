@@ -21,7 +21,7 @@ public class HexagonalBoardSetup {
 
     }
 
-    public void createHexgonalBoard(Pane Board) {
+    public void createHexagonalBoard(Pane Board) {
         if(!methodCalled) {
             // to store the values in the rayLabels array
             for(int l = 0, m = 1; l < 54; l++, m++)
@@ -147,7 +147,7 @@ public class HexagonalBoardSetup {
     }
 
 
-    public int[] RandomHexagonCoordinates()
+    public int[] randomHexagonCoordinates()
     {
         int min = 1; // setting min for the random numbers
         int max = 62; // setting max for the random numbers

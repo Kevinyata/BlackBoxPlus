@@ -6,7 +6,7 @@ import javafx.scene.shape.Circle;
 
 public class RayEntry {
     private final double[][] rayEntry; // double array to store the location of the ray entry points
-    private final Circle[] entries = new Circle[54];
+    private final Circle[] entries = new Circle[54]; //array for all entries on the board
 
     public RayEntry(double[][] rayEntry)
     {
@@ -15,6 +15,7 @@ public class RayEntry {
 
     public void placeRayEntries(Pane Board)
     {
+        //Places all entries on the board
         for(int placement = 0; placement < 54; placement++) {
             Circle entry = createEntry();
             entry.setLayoutX(rayEntry[placement][0]);
@@ -24,9 +25,10 @@ public class RayEntry {
         }
     }
 
-    public void EntryRayBuilder(Pane Board, AtomCreator atomCreator)
+    public void entryRayBuilder(Pane Board, AtomCreator atomCreator)
     {
         RayPath rays = new RayPath(rayEntry);
+        //Enables ray paths for all entries on the board
         for(int entryNum = 0; entryNum < 54; entryNum++) {
             int finalEntryNum = entryNum;
             entries[entryNum].setOnMouseClicked(mouseEvent -> rays.createRayPath(Board, finalEntryNum, entries, atomCreator));

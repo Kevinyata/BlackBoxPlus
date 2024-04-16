@@ -19,14 +19,14 @@ public class BlackBoxPlus extends Application {
         primaryStage.setTitle("Hexagonal Black Box+");
 
         HexagonalBoardSetup GameBoard  = new HexagonalBoardSetup();
-        GameBoard.createHexgonalBoard(root);
+        GameBoard.createHexagonalBoard(root);
 
         AtomCreator GameAtoms = new AtomCreator(GameBoard.getXyLocation());
-        GameAtoms.createAtoms(root, GameBoard.RandomHexagonCoordinates());
+        GameAtoms.createAtoms(root, GameBoard.randomHexagonCoordinates());
 
         RayEntry GameEntries = new RayEntry(GameBoard.getRayEntry());
         GameEntries.placeRayEntries(root);
-        GameEntries.EntryRayBuilder(root, GameAtoms);
+        GameEntries.entryRayBuilder(root, GameAtoms);
 
         createButton(root, GameAtoms);
 
@@ -49,12 +49,12 @@ public class BlackBoxPlus extends Application {
             if(b.getText().equals("Show Atoms"))
             {
                 //Shows atoms
-                atoms.ShowAtoms();
+                atoms.showAtoms();
                 b.setText("Hide Atoms"); //Switches functionality to hide
             }
             else if(b.getText().equals("Hide Atoms")) {
                 //Hides atoms
-                atoms.HideAtoms();
+                atoms.hideAtoms();
                 b.setText("Show Atoms"); //Switches functionality to show
             }
         });

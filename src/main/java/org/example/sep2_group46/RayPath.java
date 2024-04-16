@@ -7,7 +7,6 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Sphere;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class RayPath {
     private final double[][] rayEntry; // double array to store the location of the ray entry points;
@@ -19,74 +18,82 @@ public class RayPath {
 
     public void createRayPath(Pane Board, int EntryNum, Circle[] entries , AtomCreator atomCreator)
     {
-
+        //Obtains X and Y location of entry
         double x = rayEntry[EntryNum][0];
         double y = rayEntry[EntryNum][1];
 
         double[] Velocity = CalculateVelocity(EntryNum);
-        double addx = Velocity[0];
-        double addy = Velocity[1];
+        double addToXCoordinates = Velocity[0];
+        double addToYCoordinates = Velocity[1];
         int dist = (int) Velocity[2];
         int dest = (int) Velocity[3];
 
         Sphere[] Molecule = atomCreator.getMolecule();
-        int[][] COIHexagonIndex = atomCreator.getCOIHexagonIndx();
-        double[][] xyCoord = atomCreator.getXyLocation();
+        int[][] COIHexagonIndex = atomCreator.getCOIHexagonIndex();
+        double[][] xyCoordinates = atomCreator.getXyLocation();
 
-        ArrayList<Line> Rays = new ArrayList<Line>();
+        ArrayList<Line> Rays = new ArrayList<>();
         Rays.add(new Line());
         int index = 0;
+
+        //Initialises base ray
         Rays.get(index).setStartX(x);
         Rays.get(index).setStartY(y);
         Rays.get(index).setStrokeWidth(2);
         Rays.get(index).setStroke(Color.WHITE);
         Rays.get(index).setFill(Color.WHITE);
-        double[] Vel;
 
+
+        //Checks if ray will be reflected and if so marks appropriate ray entry
         for(int k = 0; k < 6; k++) {
             double x3 = (entries[EntryNum].getLayoutX() - Molecule[k].getTranslateX());
             double y3 = (entries[EntryNum].getLayoutY() - Molecule[k].getTranslateY());
             double distance = Math.hypot(x3, y3);
-            System.out.println("distance = " + distance);
             boolean isReflected = distance >= 70 && distance <= 80;
+
             if(isReflected) {
                 entries[EntryNum].setFill(Color.WHITE);
                 return;
             }
         }
 
-        int m = 0;
+        int currentDistance = 0;
         double AbsorptionTolerance = 10;
-        double COITolerance = 0.7;
-        while(m < dist*2) {
+        double CircleOfInfluenceTolerance = 0.7;
+        while(currentDistance < dist*2) {
 
-            for (int p = 0; p < 6; p++) {
-                boolean isAbsorbed = Math.abs(Molecule[p].getTranslateX() - Rays.get(index).getEndX()) <= AbsorptionTolerance && Math.abs(Rays.get(index).getEndY() - Molecule[p].getTranslateY()) <= AbsorptionTolerance;
+            //Checks if ray is absorbed
+            for (int atomNumber = 0; atomNumber < 6; atomNumber++) {
+                //See if coordinates of endpoint of a line approximately matches the coordinates of the centre of the atom
+                boolean isAbsorbed = Math.abs(Molecule[atomNumber].getTranslateX() - Rays.get(index).getEndX()) <= AbsorptionTolerance && Math.abs(Rays.get(index).getEndY() - Molecule[atomNumber].getTranslateY()) <= AbsorptionTolerance;
                 if (isAbsorbed) {
                     entries[EntryNum].setFill(Color.RED);
-                    Rays.get(index).setEndX(x + addx / 2);
-                    Rays.get(index).setEndY(y + addy / 2);
+                    Rays.get(index).setEndX(x + addToXCoordinates / 2);
+                    Rays.get(index).setEndY(y + addToYCoordinates / 2);
                     Board.getChildren().add(Rays.get(index));
                     return;
                 }
             }
 
-            for (int p = 0; p < 6; p++) {
-                for (int q = 0; q < 6; q++) {
-                    //System.out.print(COIHexagonIndex[p][q] + " ");
-                    int count = CountOccurences(COIHexagonIndex, COIHexagonIndex[p][q]);
-                    if(count == 3)
-                    {
-                        entries[EntryNum].setFill(Color.WHITE);
-                        return;
-                    }
-                   boolean isDeflected = COIHexagonIndex[p][q] != 0 && Math.abs(xyCoord[0][COIHexagonIndex[p][q]] - Rays.get(index).getEndX()) <= COITolerance && Math.abs(xyCoord[1][COIHexagonIndex[p][q]] - Rays.get(index).getEndY()) <= COITolerance;
+            //Checks if ray is deflected
+            for (int atomNumber = 0; atomNumber < 6; atomNumber++) {
+                for (int adjacentHexagon = 0; adjacentHexagon < 6; adjacentHexagon++) {
+                   boolean isDeflected = COIHexagonIndex[atomNumber][adjacentHexagon] != 0 && Math.abs(xyCoordinates[0][COIHexagonIndex[atomNumber][adjacentHexagon]] - Rays.get(index).getEndX()) <= CircleOfInfluenceTolerance && Math.abs(xyCoordinates[1][COIHexagonIndex[atomNumber][adjacentHexagon]] - Rays.get(index).getEndY()) <= CircleOfInfluenceTolerance;
                     if (isDeflected) {
+                        //counts if the ray hits 1,2 or 3 circles of influence
+                        int count = countOccurrences(COIHexagonIndex, COIHexagonIndex[atomNumber][adjacentHexagon]);
+
+                        //Adds previous ray to pane
                         Board.getChildren().add(Rays.get(index));
-                        System.out.println(p);
-                        Vel = deflectRay(addx, addy, p, count);
-                        addy = Vel[1];
-                        addx = Vel[0];
+
+                        //For debugging
+                        System.out.println("Hexagon index: " + adjacentHexagon);
+                        System.out.println("count: " + count);
+
+                        //Deflects ray appropriately and creates a new line to simulate that deflection
+                        double[] Vel = deflectRay(addToXCoordinates, addToYCoordinates, adjacentHexagon, count);
+                        addToYCoordinates = Vel[1];
+                        addToXCoordinates = Vel[0];
 
                         Rays.add(new Line());
                         index++;
@@ -101,97 +108,97 @@ public class RayPath {
             }
 
 
-            x += addx / 2;
-            y += addy / 2;
+            //Ray continues to travel until entry endpoint
+            x += addToXCoordinates / 2;
+            y += addToYCoordinates / 2;
             Rays.get(index).setEndX(x);
             Rays.get(index).setEndY(y);
-            m++;
+            currentDistance++;
         }
 
-
-//        if(!flag) {
-//            entries[dest - 1].setFill(Color.LIMEGREEN);
-//            entries[EntryNum].setFill(Color.LIMEGREEN);
-//            entries[dest-1].setMouseTransparent(true);
-//        }
+        //Adds ray to pane
         Board.getChildren().add(Rays.get(index));
+
+        //Sets ray invisible
         //Ray.setVisible(false);
     }
 
-    public int CountOccurences(int[][] COIHexagonsIndx, int key)
+    public int countOccurrences(int[][] HexagonsIndex, int key)
     {
+        //counts the amount of circle of influences that intersect at hexagon location key
         int count = 0;
-        for(int p = 0; p < 6; p++) {
-            for (int q = 0; q < 6; q++) {
-                if (COIHexagonsIndx[p][q] == key)
+        for(int atomNumber = 0; atomNumber < 6; atomNumber++) {
+            for (int adjacentHexagon = 0; adjacentHexagon < 6; adjacentHexagon++) {
+                if (HexagonsIndex[atomNumber][adjacentHexagon] == key)
                     count++;
             }
         }
         return count;
     }
 
-    public double[] deflectRay(double addx, double addy, int indx, int count) {
+    public double[] deflectRay(double addToXCoordinates, double addToYCoordinates, int index, int count) {
         double[] Vel = new double[2];
+        double directionY = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3);
         if (count == 1){
-            if(addx > 0 && indx == 2)
+            if(addToXCoordinates > 0 && index == 2) //If ray hits bottom left
             {
-                addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3);
-                addx = Math.sqrt(1875);
+                addToYCoordinates = directionY;
+                addToXCoordinates = Math.sqrt(1875);
             }
-            else if(addx < 0 && indx == 2)
+            else if(addToXCoordinates < 0 && index == 2) //If ray hits bottom left
             {
-                addy = 0;
-                addx = -88;
+                addToYCoordinates = 0;
+                addToXCoordinates = -88;
             }
-            else if(addx < 0 && indx == 3)
+            else if(addToXCoordinates < 0 && index == 3) //If ray hits bottom right
             {
-                addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3);
-                addx = Math.sqrt(1875) * -1;
+                addToYCoordinates = directionY;
+                addToXCoordinates = Math.sqrt(1875) * -1;
             }
-            else if(addx > 0 && indx == 3)
+            else if(addToXCoordinates > 0 && index == 3) //If ray hits bottom right
             {
-                addy = 0;
-                addx = 88;
+                addToYCoordinates = 0;
+                addToXCoordinates = 88;
             }
-            else if(addx > 0 && indx == 4)
+            else if(addToXCoordinates > 0 && index == 4)
             {
-                addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3) * -1;
-                addx = Math.sqrt(1875);
+                addToYCoordinates = directionY * -1;
+                addToXCoordinates = Math.sqrt(1875);
             }
-            else if(addx < 0 && indx == 4)
+            else if(addToXCoordinates < 0 && index == 4) //If ray hits top left
             {
-                addy = 0;
-                addx = -88;
+                addToYCoordinates = 0;
+                addToXCoordinates = -88;
             }
-            else if(addx < 0 && indx == 5)
+            else if(addToXCoordinates < 0 && index == 5) //If ray hits top right
             {
-                addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3) * -1;
-                addx = Math.sqrt(1875) * -1;
+                addToYCoordinates = directionY * -1;
+                addToXCoordinates = Math.sqrt(1875) * -1;
             }
-            else if(addx > 0 && indx == 5)
+            else if(addToXCoordinates > 0 && index == 5) //If ray hits top right
             {
-                addy = 0;
-                addx = 88;
+                addToYCoordinates = 0;
+                addToXCoordinates = 88;
             }
-            else if(addy > 0 && indx == 0)
+            else if(addToYCoordinates > 0 && index == 0) //If ray hits left
             {
-                addx = Math.sqrt(1875) * -1;
-                addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI /3);
+                addToXCoordinates = Math.sqrt(1875) * -1;
+                addToYCoordinates = directionY;
             }
-            else if(addy > 0 && indx == 1)
+            else if(addToYCoordinates > 0 && index == 1) //If ray hits right
             {
-                addx = Math.sqrt(1875);
-                addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI /3);
+                addToXCoordinates = Math.sqrt(1875);
+                addToYCoordinates = directionY;
             }
-            else if(addy < 0 && indx == 0)
+            else if(addToYCoordinates < 0 && index == 0) //If ray hits left
             {
-                addx = Math.sqrt(1875) * -1;
-                addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI /3) * -1;
+                addToXCoordinates = Math.sqrt(1875) * -1;
+                addToYCoordinates = directionY * -1;
             }
-            else if(addy < 0 && indx == 1)
+            else if(addToYCoordinates < 0 && index == 1) //If ray hits right
             {
-                addx = Math.sqrt(1875);
-                addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI /3) * -1;
+                addToXCoordinates = Math.sqrt(1875);
+                addToYCoordinates = directionY * -1;
             }
         }
 //
@@ -278,8 +285,8 @@ public class RayPath {
 //            addy = addy * -1;
 //        }
 
-        Vel[0] = addx;
-        Vel[1] = addy;
+        Vel[0] = addToXCoordinates;
+        Vel[1] = addToYCoordinates;
         return Vel;
     }
 
@@ -299,9 +306,16 @@ public class RayPath {
         int[] arr8 = new int[]{9,8,7,6,5,8,7,6,5};
 
         int EntryCompareValue = EntryNum + 1;
+
+        double directionY = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3);
+
+        //the entry where the ray ends
         int dest = 0;
+
+        //distance the ray travels
         int dist = 0;
 
+        //Determines the direction the initial ray travels
         for(int w = 0; w < 9; w++)
         {
             if(arr1[w] == EntryCompareValue)
@@ -322,7 +336,7 @@ public class RayPath {
             }
             if(arr3[w] == EntryCompareValue)
             {
-                addy = ((2 * Math.sqrt(1875)) * -1) * Math.sin(Math.PI /3);
+                addy = directionY * -1;
                 addx = Math.sqrt(1875) * -1;
                 dest = arr6[w];
                 dist = arr8[w];
@@ -331,7 +345,7 @@ public class RayPath {
             if(arr4[w] == EntryCompareValue)
             {
                 addx = Math.sqrt(1875) * -1;
-                addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI /3);
+                addy = directionY;
                 dest = arr5[w];
                 dist = arr7[w];
                 break;
@@ -339,14 +353,14 @@ public class RayPath {
             if(arr5[w] == EntryCompareValue)
             {
                 addx = Math.sqrt(1875);
-                addy = ((2 * Math.sqrt(1875)) * -1)  * Math.sin(Math.PI /3);
+                addy = directionY * -1;
                 dest = arr4[w];
                 dist = arr7[w];
                 break;
             }
             if(arr6[w] == EntryCompareValue)
             {
-                addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3);
+                addy = directionY;
                 addx = Math.sqrt(1875);
                 dest = arr3[w];
                 dist = arr8[w];
