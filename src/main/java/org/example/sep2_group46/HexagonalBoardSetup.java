@@ -29,6 +29,8 @@ public class HexagonalBoardSetup {
                 rayLabels[l] = String.valueOf(m);
             }
 
+            xyLocation[0][0] = -100;
+            xyLocation[1][0] = -100;
             int j = 0;
             int k = 0;
 

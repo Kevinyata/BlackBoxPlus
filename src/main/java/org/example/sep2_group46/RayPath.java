@@ -41,15 +41,27 @@ public class RayPath {
         Rays.get(index).setStrokeWidth(2);
         Rays.get(index).setStroke(Color.WHITE);
         Rays.get(index).setFill(Color.WHITE);
-        double[] Vel = new double[2];
+        double[] Vel;
+
+        for(int k = 0; k < 6; k++) {
+            double x3 = (entries[EntryNum].getLayoutX() - Molecule[k].getTranslateX());
+            double y3 = (entries[EntryNum].getLayoutY() - Molecule[k].getTranslateY());
+            double distance = Math.hypot(x3, y3);
+            System.out.println("distance = " + distance);
+            boolean isReflected = distance >= 70 && distance <= 80;
+            if(isReflected) {
+                entries[EntryNum].setFill(Color.WHITE);
+                return;
+            }
+        }
 
         int m = 0;
-        int tolerance =  10;
+        double AbsorptionTolerance = 10;
+        double COITolerance = 0.7;
         while(m < dist*2) {
 
             for (int p = 0; p < 6; p++) {
-
-                boolean isAbsorbed = Math.abs(Molecule[p].getTranslateX() - (Rays.get(index).getEndX() + addx)) <= tolerance && Math.abs((addy + Rays.get(index).getEndY()) - Molecule[p].getTranslateY()) <= tolerance;
+                boolean isAbsorbed = Math.abs(Molecule[p].getTranslateX() - Rays.get(index).getEndX()) <= AbsorptionTolerance && Math.abs(Rays.get(index).getEndY() - Molecule[p].getTranslateY()) <= AbsorptionTolerance;
                 if (isAbsorbed) {
                     entries[EntryNum].setFill(Color.RED);
                     Rays.get(index).setEndX(x + addx / 2);
@@ -62,13 +74,17 @@ public class RayPath {
             for (int p = 0; p < 6; p++) {
                 for (int q = 0; q < 6; q++) {
                     //System.out.print(COIHexagonIndex[p][q] + " ");
-                    boolean isDeflected = COIHexagonIndex[p][q] != 0 && Math.abs(xyCoord[0][COIHexagonIndex[p][q]] - Rays.get(index).getEndX()) <= tolerance && Math.abs(xyCoord[1][COIHexagonIndex[p][q]] - Rays.get(index).getEndY()) <= tolerance;
-
+                    int count = CountOccurences(COIHexagonIndex, COIHexagonIndex[p][q]);
+                    if(count == 3)
+                    {
+                        entries[EntryNum].setFill(Color.WHITE);
+                        return;
+                    }
+                   boolean isDeflected = COIHexagonIndex[p][q] != 0 && Math.abs(xyCoord[0][COIHexagonIndex[p][q]] - Rays.get(index).getEndX()) <= COITolerance && Math.abs(xyCoord[1][COIHexagonIndex[p][q]] - Rays.get(index).getEndY()) <= COITolerance;
                     if (isDeflected) {
-
                         Board.getChildren().add(Rays.get(index));
                         System.out.println(p);
-                        Vel = deflectRay(addx, addy, p, CountOccurences(COIHexagonIndex, COIHexagonIndex[p][q]));
+                        Vel = deflectRay(addx, addy, p, count);
                         addy = Vel[1];
                         addx = Vel[0];
 
@@ -117,29 +133,9 @@ public class RayPath {
     public double[] deflectRay(double addx, double addy, int indx, int count) {
         double[] Vel = new double[2];
         if (count == 1){
-            if(addx > 0 && indx == 4)
+            if(addx > 0 && indx == 2)
             {
                 addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3);
-                addx = Math.sqrt(1875);
-            }
-            else if(addx < 0 && indx == 4)
-            {
-                addy = 0;
-                addx = -88;
-            }
-            else if(addx < 0 && indx == 5)
-            {
-                addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3);
-                addx = Math.sqrt(1875) * -1;
-            }
-            else if(addx > 0 && indx == 5)
-            {
-                addy = 0;
-                addx = 88;
-            }
-            else if(addx > 0 && indx == 2)
-            {
-                addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3) * -1;
                 addx = Math.sqrt(1875);
             }
             else if(addx < 0 && indx == 2)
@@ -149,7 +145,7 @@ public class RayPath {
             }
             else if(addx < 0 && indx == 3)
             {
-                addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3) * -1;
+                addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3);
                 addx = Math.sqrt(1875) * -1;
             }
             else if(addx > 0 && indx == 3)
@@ -157,22 +153,42 @@ public class RayPath {
                 addy = 0;
                 addx = 88;
             }
-            else if(addy > 0 && indx == 1)
+            else if(addx > 0 && indx == 4)
+            {
+                addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3) * -1;
+                addx = Math.sqrt(1875);
+            }
+            else if(addx < 0 && indx == 4)
+            {
+                addy = 0;
+                addx = -88;
+            }
+            else if(addx < 0 && indx == 5)
+            {
+                addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3) * -1;
+                addx = Math.sqrt(1875) * -1;
+            }
+            else if(addx > 0 && indx == 5)
+            {
+                addy = 0;
+                addx = 88;
+            }
+            else if(addy > 0 && indx == 0)
             {
                 addx = Math.sqrt(1875) * -1;
                 addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI /3);
             }
-            else if(addy > 0 && indx == 0)
+            else if(addy > 0 && indx == 1)
             {
                 addx = Math.sqrt(1875);
                 addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI /3);
             }
-            else if(addy < 0 && indx == 1)
+            else if(addy < 0 && indx == 0)
             {
                 addx = Math.sqrt(1875) * -1;
                 addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI /3) * -1;
             }
-            else if(addy < 0 && indx == 0)
+            else if(addy < 0 && indx == 1)
             {
                 addx = Math.sqrt(1875);
                 addy = (2 * Math.sqrt(1875)) * Math.sin(Math.PI /3) * -1;
