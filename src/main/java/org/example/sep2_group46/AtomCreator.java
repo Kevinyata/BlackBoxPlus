@@ -153,8 +153,6 @@ public class AtomCreator {
         }
         else //For hexagons location that aren't at the edge of the board
         {
-            COIHexagonIndex[atomNumber][0] = hexagonLocation-1;
-            COIHexagonIndex[atomNumber][1] = hexagonLocation+1;
             for(int i = 1; i < 8; i++)
             {
                 if(hexagonLocation > LeftEdgeLocations[i] && hexagonLocation < RightEdgeLocations[i])
@@ -165,6 +163,8 @@ public class AtomCreator {
 
                     if(hexagonLocation < 27 && hexagonLocation > 7)
                     {
+                        COIHexagonIndex[atomNumber][0] = hexagonLocation-1;
+                        COIHexagonIndex[atomNumber][1] = hexagonLocation+1;
                         COIHexagonIndex[atomNumber][2] = hexagonLocation + numberOfHexagonsOnCurrentRow;
                         COIHexagonIndex[atomNumber][3] = COIHexagonIndex[atomNumber][2] + 1;
                         COIHexagonIndex[atomNumber][4] = hexagonLocation - numberOfHexagonsOnCurrentRow;
@@ -172,6 +172,8 @@ public class AtomCreator {
                     }
                     else if(hexagonLocation > 27 && hexagonLocation < 35)
                     {
+                        COIHexagonIndex[atomNumber][0] = hexagonLocation-1;
+                        COIHexagonIndex[atomNumber][1] = hexagonLocation+1;
                         COIHexagonIndex[atomNumber][2] = hexagonLocation + 8;
                         COIHexagonIndex[atomNumber][3] = COIHexagonIndex[atomNumber][2] + 1;
                         COIHexagonIndex[atomNumber][4] = hexagonLocation - 9;
@@ -179,6 +181,8 @@ public class AtomCreator {
                     }
                     else
                     {
+                        COIHexagonIndex[atomNumber][0] = hexagonLocation-1;
+                        COIHexagonIndex[atomNumber][1] = hexagonLocation+1;
                         COIHexagonIndex[atomNumber][2] = hexagonLocation + numberOfHexagonsOnNextRow;
                         COIHexagonIndex[atomNumber][3] = COIHexagonIndex[atomNumber][2] + 1;
                         COIHexagonIndex[atomNumber][4] = hexagonLocation - numberOfHexagonsOnPreviousRow;

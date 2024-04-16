@@ -5,7 +5,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Sphere;
-
 import java.util.ArrayList;
 
 public class RayPath {
@@ -43,7 +42,6 @@ public class RayPath {
         Rays.get(index).setStartY(y);
         Rays.get(index).setStrokeWidth(2);
         Rays.get(index).setStroke(Color.WHITE);
-        Rays.get(index).setFill(Color.WHITE);
 
 
         //Checks if ray will be reflected and if so marks appropriate ray entry
@@ -61,14 +59,14 @@ public class RayPath {
 
         int currentDistance = 0;
         double AbsorptionTolerance = 10;
-        double CircleOfInfluenceTolerance = 0.7;
+        double CircleOfInfluenceTolerance = 3;
         while(currentDistance < dist) {
 
             //Checks if ray is absorbed
             for (int atomNumber = 0; atomNumber < 6; atomNumber++) {
                 //See if coordinates of endpoint of a line approximately matches the coordinates of the centre of the atom
-                boolean areXCoordinatesEqual = Math.abs(Molecule[atomNumber].getTranslateX() - Rays.get(index).getEndX()) <= AbsorptionTolerance;
-                boolean areYCoordinatesEqual = Math.abs(Rays.get(index).getEndY() - Molecule[atomNumber].getTranslateY()) <= AbsorptionTolerance;
+                boolean areXCoordinatesEqual = Math.abs(Molecule[atomNumber].getTranslateX() - (Rays.get(index).getEndX() + addToXCoordinates)) <= AbsorptionTolerance;
+                boolean areYCoordinatesEqual = Math.abs((Rays.get(index).getEndY() + addToYCoordinates) - Molecule[atomNumber].getTranslateY()) <= AbsorptionTolerance;
                 boolean isAbsorbed = areXCoordinatesEqual && areYCoordinatesEqual;
                 if (isAbsorbed) {
                     entries[EntryNum].setFill(Color.RED);
@@ -110,17 +108,16 @@ public class RayPath {
                         Rays.get(index).setStartY(Rays.get(index - 1).getEndY());
                         Rays.get(index).setStrokeWidth(2);
                         Rays.get(index).setStroke(Color.WHITE);
-                        Rays.get(index).setFill(Color.WHITE);
                     }
                 }
             }
 
             //Ray continues to travel until entry endpoint
+            currentDistance++;
             x += addToXCoordinates;
             y += addToYCoordinates;
             Rays.get(index).setEndX(x);
             Rays.get(index).setEndY(y);
-            currentDistance++;
         }
 
         //Adds ray to pane
@@ -381,6 +378,19 @@ public class RayPath {
         Velocity[2] = dist;
         Velocity[3] = dest;
         return Velocity;
+    }
+
+    int rayEntryEndPoint(Line ray, Circle[] entries)
+    {
+        double tolerance = 3;
+        for(int i = 0; i < entries.length; i++)
+        {
+            boolean areXCoordinatesEqual = Math.abs(ray.getEndX() - entries[i].getLayoutX()) <= tolerance;
+            boolean areYCoordinatesEqual = Math.abs(ray.getEndY() - entries[i].getLayoutY()) <= tolerance;
+            if(areXCoordinatesEqual && areYCoordinatesEqual)
+                return i;
+        }
+        return -1;
     }
 
 
