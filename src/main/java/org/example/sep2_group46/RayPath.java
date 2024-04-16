@@ -22,10 +22,12 @@ public class RayPath {
         double x = rayEntry[EntryNum][0];
         double y = rayEntry[EntryNum][1];
 
+        //Determines the direction of the ray travels in
         double[] Velocity = CalculateVelocity(EntryNum);
-        double addToXCoordinates = Velocity[0];
-        double addToYCoordinates = Velocity[1];
-        int dist = (int) Velocity[2];
+
+        double addToXCoordinates = Velocity[0]/2;
+        double addToYCoordinates = Velocity[1]/2;
+        int dist = (int) Velocity[2]*2;
         int dest = (int) Velocity[3];
 
         Sphere[] Molecule = atomCreator.getMolecule();
@@ -60,7 +62,7 @@ public class RayPath {
         int currentDistance = 0;
         double AbsorptionTolerance = 10;
         double CircleOfInfluenceTolerance = 0.7;
-        while(currentDistance < dist*2) {
+        while(currentDistance < dist) {
 
             //Checks if ray is absorbed
             for (int atomNumber = 0; atomNumber < 6; atomNumber++) {
@@ -68,8 +70,8 @@ public class RayPath {
                 boolean isAbsorbed = Math.abs(Molecule[atomNumber].getTranslateX() - Rays.get(index).getEndX()) <= AbsorptionTolerance && Math.abs(Rays.get(index).getEndY() - Molecule[atomNumber].getTranslateY()) <= AbsorptionTolerance;
                 if (isAbsorbed) {
                     entries[EntryNum].setFill(Color.RED);
-                    Rays.get(index).setEndX(x + addToXCoordinates / 2);
-                    Rays.get(index).setEndY(y + addToYCoordinates / 2);
+                    Rays.get(index).setEndX(x + addToXCoordinates);
+                    Rays.get(index).setEndY(y + addToYCoordinates);
                     Board.getChildren().add(Rays.get(index));
                     return;
                 }
@@ -92,8 +94,8 @@ public class RayPath {
 
                         //Deflects ray appropriately and creates a new line to simulate that deflection
                         double[] Vel = deflectRay(addToXCoordinates, addToYCoordinates, adjacentHexagon, count);
-                        addToYCoordinates = Vel[1];
-                        addToXCoordinates = Vel[0];
+                        addToYCoordinates = Vel[1]/2;
+                        addToXCoordinates = Vel[0]/2;
 
                         Rays.add(new Line());
                         index++;
@@ -109,8 +111,8 @@ public class RayPath {
 
 
             //Ray continues to travel until entry endpoint
-            x += addToXCoordinates / 2;
-            y += addToYCoordinates / 2;
+            x += addToXCoordinates;
+            y += addToYCoordinates;
             Rays.get(index).setEndX(x);
             Rays.get(index).setEndY(y);
             currentDistance++;
