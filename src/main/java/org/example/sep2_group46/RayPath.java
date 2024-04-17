@@ -62,16 +62,20 @@ public class RayPath {
         double CircleOfInfluenceTolerance = 3;
         while(currentDistance < dist) {
 
+            x += addToXCoordinates;
+            y += addToYCoordinates;
             //Checks if ray is absorbed
             for (int atomNumber = 0; atomNumber < 6; atomNumber++) {
                 //See if coordinates of endpoint of a line approximately matches the coordinates of the centre of the atom
-                boolean areXCoordinatesEqual = Math.abs(Molecule[atomNumber].getTranslateX() - (Rays.get(index).getEndX() + addToXCoordinates)) <= AbsorptionTolerance;
-                boolean areYCoordinatesEqual = Math.abs((Rays.get(index).getEndY() + addToYCoordinates) - Molecule[atomNumber].getTranslateY()) <= AbsorptionTolerance;
-                boolean isAbsorbed = areXCoordinatesEqual && areYCoordinatesEqual;
+                boolean areXCoordinatesEqual = Math.abs(Molecule[atomNumber].getTranslateX() - (Rays.get(index).getEndX() + addToXCoordinates*2)) <= AbsorptionTolerance;
+                boolean areYCoordinatesEqual = Math.abs((Rays.get(index).getEndY() + addToYCoordinates*2) - Molecule[atomNumber].getTranslateY()) <= AbsorptionTolerance;
+                boolean areXCoordinatesEqual2 = Math.abs(Molecule[atomNumber].getTranslateX() - Rays.get(index).getEndX()) <= AbsorptionTolerance;
+                boolean areYCoordinatesEqual2 = Math.abs(Rays.get(index).getEndY() - Molecule[atomNumber].getTranslateY()) <= AbsorptionTolerance;
+                boolean isAbsorbed = (areXCoordinatesEqual && areYCoordinatesEqual) || (areXCoordinatesEqual2 && areYCoordinatesEqual2);
                 if (isAbsorbed) {
                     entries[EntryNum].setFill(Color.RED);
-                    Rays.get(index).setEndX(x + addToXCoordinates);
-                    Rays.get(index).setEndY(y + addToYCoordinates);
+                    Rays.get(index).setEndX(x);
+                    Rays.get(index).setEndY(y);
                     Board.getChildren().add(Rays.get(index));
                     return;
                 }
@@ -114,8 +118,6 @@ public class RayPath {
 
             //Ray continues to travel until entry endpoint
             currentDistance++;
-            x += addToXCoordinates;
-            y += addToYCoordinates;
             Rays.get(index).setEndX(x);
             Rays.get(index).setEndY(y);
         }
