@@ -14,11 +14,10 @@ public class HexagonalBoardSetup {
     private double OffsetY = -100; //The difference of Y location for each row
     private boolean flag = true; //Indicates whether X location decreases or increases
     private boolean methodCalled = false;
-
     double[][] rayEntry = new double[54][2]; // double array to store the location of the ray entry points
     String[] rayLabels = new String[61]; // String array which stores the numbering values
-    int[] rayEntryHexagon = new int[54]; // Integer array to store the hexagon of each ray entry
-    private final int[] EdgeLocations = new int[]{1, 6, 12, 19, 27, 36, 44, 51, 57, 5, 11, 18, 26, 35, 43, 50, 56, 61, 2, 3, 4, 58, 59, 60}; // integer array of all edge hexagons
+    double[][][] hexagonsRayEntries = new double[24][3][2]; // Double array for storing ray entries for each hexagon
+    private final int[] EdgeLocations = new int[]{1, 2, 3, 4, 5, 6, 11, 12, 18, 19, 26, 27, 35, 36, 43, 44, 50, 51, 56, 57, 58, 59, 60, 61}; // integer array of all edge hexagons
 
     public HexagonalBoardSetup() {
 
@@ -166,15 +165,21 @@ public class HexagonalBoardSetup {
             throw new IllegalStateException("This method can only be called once");
         }
 
-        // loop to store the values of what hexagon a ray entry is
-        for(int y = 0; y < 54; y++)
+        // loop for storing ray entries for each hexagon
+        for(int x = 0; x < 24; x++)
         {
-            for(int x = 0; x < 24; x++)
+            int k = 0;
+            for(int y = 0; y < 54; y++)
             {
                 double distance = Math.abs(Math.hypot(rayEntry[y][0] - xyLocation[0][EdgeLocations[x]], rayEntry[y][1] - xyLocation[1][EdgeLocations[x]]));
                 if(distance < 50 && distance > 40)
                 {
-                    rayEntryHexagon[y] = EdgeLocations[x];
+                    hexagonsRayEntries[x][k][0] = rayEntry[y][0];
+                    hexagonsRayEntries[x][k][1] = rayEntry[y][1];
+                    k++;
+                }
+                if(k == 3)
+                {
                     break;
                 }
             }
