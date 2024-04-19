@@ -7,7 +7,11 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.scene.control.TextArea;
+import javafx.scene.layout.VBox;
 
 
 public class BlackBoxPlus extends Application {
@@ -29,6 +33,7 @@ public class BlackBoxPlus extends Application {
         GameEntries.entryRayBuilder(root, GameAtoms);
 
         createButton(root, GameAtoms);
+        createGuide(root);
 
         Scene scene = new Scene(root, 400, 400);
         primaryStage.setScene(scene);
@@ -59,6 +64,27 @@ public class BlackBoxPlus extends Application {
             }
         });
         Board.getChildren().add(b);
+    }
+
+
+    private void createGuide(Pane board)
+    {
+        Text guide = new Text();
+        guide.setText("""
+                Click circular ray entries to shoot a ray
+
+                If the ray entry turns red, the ray was absorbed
+
+                If the entry turns white, the ray was reflected
+
+                If it remains yellow, the ray hit nothing
+
+                Any other colour means, the ray was deflected""");
+        guide.setFont(Font.font("Arial", 12));
+        guide.setLayoutX(1200);
+        guide.setLayoutY(200);
+        guide.setFill(Color.YELLOW);
+        board.getChildren().add(guide);
     }
 
     public static void main(String[] args) {
