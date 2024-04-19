@@ -161,7 +161,7 @@ public class AtomCreator {
                     int numberOfHexagonsOnPreviousRow = (RightEdgeLocations[i-1] - LeftEdgeLocations[i-1]) + 1;
                     int numberOfHexagonsOnNextRow = (RightEdgeLocations[i+1] - LeftEdgeLocations[i+1]) + 1;
 
-                    if(hexagonLocation < 27 && hexagonLocation > 7)
+                    if(hexagonLocation < 27 && hexagonLocation > 6)
                     {
                         COIHexagonIndex[atomNumber][0] = hexagonLocation-1;
                         COIHexagonIndex[atomNumber][1] = hexagonLocation+1;
