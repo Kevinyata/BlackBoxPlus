@@ -25,7 +25,7 @@ public class RayEntry {
         }
     }
 
-    public void entryRayBuilder(Pane Board, AtomCreator atomCreator)
+    public RayPath entryRayBuilder(Pane Board, AtomCreator atomCreator)
     {
         RayPath rays = new RayPath(rayEntry);
         //Enables ray paths for all entries on the board
@@ -33,6 +33,7 @@ public class RayEntry {
             int finalEntryNum = entryNum;
             entries[entryNum].setOnMouseClicked(mouseEvent -> rays.createRayPath(Board, finalEntryNum, entries, atomCreator));
         }
+        return rays;
     }
 
 

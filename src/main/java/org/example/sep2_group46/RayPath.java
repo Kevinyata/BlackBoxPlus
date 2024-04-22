@@ -1,6 +1,5 @@
 package org.example.sep2_group46;
 
-import java.util.Random;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -10,7 +9,7 @@ import java.util.ArrayList;
 
 public class RayPath {
     private final double[][] rayEntry; // double array to store the location of the ray entry points;
-    private int rayCount = 0; //Counts the amount of rays sent
+    private int rayMarkerCount = 0; //Counts the amount of rays sent
 
     public RayPath(double[][] rayEntry)
     {
@@ -19,6 +18,8 @@ public class RayPath {
 
     public void createRayPath(Pane Board, int EntryNum, Circle[] entries , AtomCreator atomCreator)
     {
+        // loop for storing ray entries for each hexagon
+
         //Obtains X and Y location of entry
         double x = rayEntry[EntryNum][0];
         double y = rayEntry[EntryNum][1];
@@ -32,8 +33,30 @@ public class RayPath {
         int dest = (int) Velocity[3];
 
         Sphere[] Molecule = atomCreator.getMolecule();
+        int count = 0;
         int[][] COIHexagonIndex = atomCreator.getCOIHexagonIndex();
         double[][] xyCoordinates = atomCreator.getXyLocation();
+        double[][][] hexagonsRayEntries = new double[24][3][2]; // Double array for storing ray entries for each hexagon
+        final int[] EdgeLocations = new int[]{1, 2, 3, 4, 5, 6, 11, 12, 18, 19, 26, 27, 35, 36, 43, 44, 50, 51, 56, 57, 58, 59, 60, 61}; // integer array of all edge hexagons
+
+        for(int X = 0; X < 24; X++)
+        {
+            int k = 0;
+            for(int Y = 0; Y < 54; Y++)
+            {
+                double distance = Math.abs(Math.hypot(rayEntry[Y][0] - xyCoordinates[0][EdgeLocations[X]], rayEntry[Y][1] - xyCoordinates[1][EdgeLocations[X]]));
+                if(distance < 50 && distance > 40)
+                {
+                    hexagonsRayEntries[X][k][0] = rayEntry[Y][0];
+                    hexagonsRayEntries[X][k][1] = rayEntry[Y][1];
+                    k++;
+                }
+                if(k == 3)
+                {
+                    break;
+                }
+            }
+        }
 
         ArrayList<Line> Rays = new ArrayList<>();
         Rays.add(new Line());
@@ -54,18 +77,19 @@ public class RayPath {
             boolean isReflected = distance >= 70 && distance <= 80;
 
             if(isReflected) {
-                rayCount++;
+                rayMarkerCount++;
                 entries[EntryNum].setFill(Color.WHITE);
                 entries[EntryNum].setMouseTransparent(true);
                 return;
             }
         }
 
-        int currentDistance = 0;
+
         double AbsorptionTolerance = 10;
         double CircleOfInfluenceTolerance = 8;
         boolean isDeflectedFlag = false;
-        while(currentDistance < dist) {
+        boolean hexagonEdgeFlag = true;
+        while(hexagonEdgeFlag) {
 
             //Checks if ray is deflected
             for (int atomNumber = 0; atomNumber < 6; atomNumber++) {
@@ -131,10 +155,11 @@ public class RayPath {
                     double differenceY = Molecule[atomNumber].getTranslateY() - Rays.get(index).getEndY();
                     Rays.get(index).setEndX(x + differenceX);
                     Rays.get(index).setEndY(y + differenceY);
+
                     //Adds ray to board
                     Board.getChildren().add(Rays.get(index));
                     entries[EntryNum].setMouseTransparent(true);
-                    rayCount++;
+                    rayMarkerCount++;
                     return;
                 }
             }
@@ -143,15 +168,30 @@ public class RayPath {
             //Ray continues to travel until entry endpoint
             x += addToXCoordinates;
             y += addToYCoordinates;
-            currentDistance++;
             Rays.get(index).setEndX(x);
             Rays.get(index).setEndY(y);
+
+                for (int i = 0; i < 24; i++) {
+                    for (int j = 0; j < 3; j++) {
+                        boolean areXCoordinatesEq = Math.abs(hexagonsRayEntries[i][j][0] - (Rays.get(index).getEndX() + addToXCoordinates)) <= CircleOfInfluenceTolerance;
+                        boolean areYCoordinatesEq = Math.abs(hexagonsRayEntries[i][j][1] - (Rays.get(index).getEndY() + addToYCoordinates)) <= CircleOfInfluenceTolerance;
+                        if (areXCoordinatesEq && areYCoordinatesEq) {
+                            hexagonEdgeFlag = false;
+                            Rays.get(index).setEndX(Rays.get(index).getEndX() + addToXCoordinates);
+                            Rays.get(index).setEndY(Rays.get(index).getEndY() + addToYCoordinates);
+
+                            break;
+                        }
+                    }
+                }
         }
+
+
 
         //Adds ray to pane
         Board.getChildren().add(Rays.get(index));
 
-        rayCount++;
+        rayMarkerCount+=2;
 
         //Sets ray invisible
         //Ray.setVisible(false);
@@ -243,8 +283,7 @@ public class RayPath {
                 addToYCoordinates = directionY * -1;
             }
         }
-
-        if(count == 2) //two circles of influence are detected
+        else if(count == 2) //two circles of influence are detected
        {
             if(addToXCoordinates > 0 && addToYCoordinates == 0 && (index[0] == 4 || index[0] == 2) && (index[1] == 4 || index[1] == 2))//ray hits top left && bottom left
             {
@@ -320,8 +359,7 @@ public class RayPath {
                 addToYCoordinates = addToYCoordinates * -1;
             }
         }
-
-        if(count == 3)//three circles of influence are detected
+        else if(count == 3)//three circles of influence are detected
         {
             addToXCoordinates = addToXCoordinates * -1;
             addToYCoordinates = addToYCoordinates * -1;
@@ -417,7 +455,7 @@ public class RayPath {
         return Velocity;
     }
 
-    public int getRayCount() {
-        return rayCount;
+    public int getRayMarkerCount() {
+        return rayMarkerCount;
     }
 }
