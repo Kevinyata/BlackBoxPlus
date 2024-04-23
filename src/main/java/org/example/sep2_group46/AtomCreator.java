@@ -31,12 +31,8 @@ public class AtomCreator {
         this.xyLocation = xyLocation;
     }
 
-    public void createAtoms(Pane Board, int[] RandomXY)
+    public void createAtoms(int[] RandomXY)
     {
-        //Initialises array with 0s
-        for (int i = 0; i < 6; i++) {
-            Arrays.fill(COIHexagonIndex[i], 0);
-        }
 
         //Creates atoms at 6 random hexagon locations
         for(int i = 0; i < 6; i++) {
@@ -49,14 +45,12 @@ public class AtomCreator {
             COI.setCenterY(xyLocation[1][RandomXY[i]]);
 
             CirclesOfInfluence[i] = COI;
-            Board.getChildren().add(COI);
 
             Sphere molecule = createMolecule();
             molecule.setTranslateX(xyLocation[0][RandomXY[i]]);
             molecule.setTranslateY(xyLocation[1][RandomXY[i]]);
 
             Molecule[i] = molecule;
-            Board.getChildren().add(molecule);
 
             //Sets the atom invisible
             COI.setVisible(false);
@@ -211,6 +205,10 @@ public class AtomCreator {
 
     public double[][] getXyLocation() {
         return xyLocation;
+    }
+
+    public Circle[] getCirclesOfInfluence() {
+        return CirclesOfInfluence;
     }
 
     public Circle createCircleOfInfluence()

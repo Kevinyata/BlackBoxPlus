@@ -30,15 +30,17 @@ public class BlackBoxPlus extends Application {
 
         AtomCreator GameAtoms = new AtomCreator(GameBoard.getXyLocation());
         int[] randomHexagonCoordinates = GameBoard.randomHexagonCoordinates();
-        GameAtoms.createAtoms(root, randomHexagonCoordinates);
+        GameAtoms.createAtoms(randomHexagonCoordinates);
+
+        root.getChildren().addAll(Arrays.asList(GameAtoms.getMolecule()));
+        root.getChildren().addAll(Arrays.asList(GameAtoms.getCirclesOfInfluence()));
 
         RayEntry GameEntries = new RayEntry(GameBoard.getRayEntry());
         GameEntries.placeRayEntries(root);
         RayPath rays = GameEntries.entryRayBuilder(root, GameAtoms);
 
-        createButtonRelatedToAtoms(root, GameAtoms);
         createGuessButton(root, rays, randomHexagonCoordinates);
-        createEndGameButton(root);
+        root.getChildren().addAll(createEndGameButton(), createButtonRelatedToAtoms(GameAtoms));
 
         Scene scene = new Scene(root, 400, 400);
         primaryStage.setScene(scene);
@@ -46,37 +48,36 @@ public class BlackBoxPlus extends Application {
         primaryStage.show();
     }
 
-    private void createEndGameButton(Pane Board)
+    private Button createEndGameButton()
     {
-        Button b = new Button();
-        b.setText("End Game");
-        b.setTextFill(Color.YELLOW);
-        b.setStyle("-fx-background-color: black;-fx-border-color: yellow; -fx-border-width: 2;");
-        b.setLayoutX(1300);
-        b.setLayoutY(590);
-        b.setPrefSize(150, 50);
-        b.setOnAction(e -> {
-            System.exit(0);
-        });
-        Board.getChildren().add(b);
+        Button endGameButton = new Button();
+        endGameButton.setText("End Game");
+        endGameButton.setTextFill(Color.YELLOW);
+        endGameButton.setStyle("-fx-background-color: black;-fx-border-color: yellow; -fx-border-width: 2;");
+        endGameButton.setLayoutX(1300);
+        endGameButton.setLayoutY(590);
+        endGameButton.setPrefSize(150, 50);
+        endGameButton.setOnAction(e -> System.exit(0));
+        return endGameButton;
     }
 
     private void createGuessButton(Pane Board, RayPath rays, int[] hexagonCoordinates)
     {
-        Button b = new Button();
-        b.setText("Guess Atoms");
-        b.setTextFill(Color.YELLOW);
-        b.setStyle("-fx-background-color: black;-fx-border-color: yellow; -fx-border-width: 2;");
-        b.setLayoutX(1300);
-        b.setLayoutY(500);
-        b.setPrefSize(150, 50);
-        b.setOnAction(e -> {
+        Button guessButton = new Button();
+        guessButton.setText("Guess Atoms");
+        guessButton.setTextFill(Color.YELLOW);
+        guessButton.setStyle("-fx-background-color: black;-fx-border-color: yellow; -fx-border-width: 2;");
+        guessButton.setLayoutX(1300);
+        guessButton.setLayoutY(500);
+        guessButton.setPrefSize(150, 50);
+        guessButton.setOnAction(e -> {
             Text GuessPrompt = new Text();
             GuessPrompt.setText("""
                     Guess Atoms by typing the hexagon numbers you think the atoms are in:
-                    Make sure to format it as this in the white text box
-                    "Hexagon Number 1,Hexagon Number 2,Hexagon Number 3 etc" 
-                    Please press ENTER to confirm your answers
+                    Format your guesses like this in the white text box under this prompt
+                    "Hexagon Number 1,Hexagon Number 2,Hexagon Number 3,etc"
+                    Commas between each hexagon number and no spaces
+                    Press ENTER to confirm your answers
                     """);
             GuessPrompt.setFont(Font.font("Arial", 12));
             GuessPrompt.setLayoutX(1140);
@@ -88,9 +89,10 @@ public class BlackBoxPlus extends Application {
             GuessPromptArea.setEditable(true);
             VBox box = new VBox(GuessPromptArea);
             box.setLayoutX(1250);
-            box.setLayoutY(250);
+            box.setLayoutY(270);
             box.setPrefSize(150, 50);
             Board.getChildren().add(box);
+            guessButton.setDisable(true);
 
             GuessPromptArea.setOnKeyPressed(keyEvent -> {if(keyEvent.getCode() == KeyCode.ENTER)
             {
@@ -107,10 +109,11 @@ public class BlackBoxPlus extends Application {
 
                 for(int i = 0; i < hexagonNumbers.length; i++) {
                     int finalI = i;
-                    boolean a1 = Arrays.stream(hexagonCoordinates).noneMatch(hex -> hex == Integer.parseInt(hexagonNumbers[finalI]));
-                    if(a1)
+                    boolean isGuessCorrect = Arrays.stream(hexagonCoordinates).noneMatch(hex -> hex == Integer.parseInt(hexagonNumbers[finalI]));
+                    if(isGuessCorrect)
                         misplacedAtomsCount++;
                 }
+
                 Board.getChildren().forEach(node -> node.setVisible(true));
                 Text score = new Text();
                 int scoreValue = rays.getRayMarkerCount() + (5 * misplacedAtomsCount);
@@ -120,15 +123,14 @@ public class BlackBoxPlus extends Application {
                 score.setLayoutY(100);
                 score.setFill(Color.YELLOW);
                 Board.getChildren().add(score);
-                //System.exit(1);
             }
             });
 
         });
-        Board.getChildren().add(b);
+        Board.getChildren().add(guessButton);
     }
 
-    private void createButtonRelatedToAtoms(Pane Board, AtomCreator atoms)
+    private Button createButtonRelatedToAtoms(AtomCreator atoms)
     {
         Button b = new Button();
         b.setText("Show Atoms");
@@ -150,19 +152,7 @@ public class BlackBoxPlus extends Application {
                 b.setText("Show Atoms"); //Switches functionality to show
             }
         });
-        Board.getChildren().add(b);
-    }
-
-
-    private void createGuide(Pane board, RayPath rays)
-    {
-        Text score = new Text();
-        score.setText("Score: " + rays.getRayMarkerCount());
-        score.setFont(Font.font("Arial", 12));
-        score.setLayoutX(1200);
-        score.setLayoutY(200);
-        score.setFill(Color.YELLOW);
-        board.getChildren().add(score);
+        return b;
     }
 
     public static void main(String[] args) {
