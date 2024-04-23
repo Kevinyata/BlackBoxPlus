@@ -40,8 +40,6 @@ public class BlackBoxPlus extends Application {
         createGuessButton(root, rays, randomHexagonCoordinates);
         createEndGameButton(root);
 
-        //createGuide(root);
-
         Scene scene = new Scene(root, 400, 400);
         primaryStage.setScene(scene);
         primaryStage.setFullScreen(true);
@@ -78,10 +76,10 @@ public class BlackBoxPlus extends Application {
                     Guess Atoms by typing the hexagon numbers you think the atoms are in:
                     Make sure to format it as this in the white text box
                     "Hexagon Number 1,Hexagon Number 2,Hexagon Number 3 etc" 
-                    Please press enter to confirm your answers
+                    Please press ENTER to confirm your answers
                     """);
             GuessPrompt.setFont(Font.font("Arial", 12));
-            GuessPrompt.setLayoutX(1150);
+            GuessPrompt.setLayoutX(1140);
             GuessPrompt.setLayoutY(200);
             GuessPrompt.setFill(Color.YELLOW);
             Board.getChildren().add(GuessPrompt);
@@ -96,9 +94,16 @@ public class BlackBoxPlus extends Application {
 
             GuessPromptArea.setOnKeyPressed(keyEvent -> {if(keyEvent.getCode() == KeyCode.ENTER)
             {
+                GuessPromptArea.setEditable(false);
+                GuessPromptArea.setMouseTransparent(true);
                 String text = GuessPromptArea.getText();
                 int misplacedAtomsCount = 0;
                 String[] hexagonNumbers = text.split("[,\n]");
+
+                if(hexagonNumbers.length < 6)
+                {
+                    misplacedAtomsCount += (6 - hexagonNumbers.length);
+                }
 
                 for(int i = 0; i < hexagonNumbers.length; i++) {
                     int finalI = i;
@@ -111,7 +116,7 @@ public class BlackBoxPlus extends Application {
                 int scoreValue = rays.getRayMarkerCount() + (5 * misplacedAtomsCount);
                 score.setText("Score: " + scoreValue);
                 score.setFont(Font.font("Arial", 20));
-                score.setLayoutX(1300);
+                score.setLayoutX(1250);
                 score.setLayoutY(100);
                 score.setFill(Color.YELLOW);
                 Board.getChildren().add(score);
