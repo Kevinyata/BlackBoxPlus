@@ -10,6 +10,12 @@ import java.util.ArrayList;
 public class RayPath {
     private final double[][] rayEntry; // double array to store the location of the ray entry points;
     private int rayMarkerCount = 0; //Counts the amount of rays sent
+    final int[] rightLoc = new int[]{12, 16, 20, 24, 29, 33, 37, 41, 52};
+    final int[] leftLoc = new int[]{1, 13, 17, 21, 25, 31, 35, 39, 43};
+    final int[] bottomRightLoc = new int[]{44, 46, 48, 50, 53, 42, 38, 34, 30};
+    final int[] topLeftLoc = new int[]{26, 22, 18, 14, 2, 4, 6, 8, 10};
+    final int[] bottomLeftLoc = new int[]{27, 32, 36, 40, 45, 47, 49, 51, 54};
+    final int[] topRightLoc = new int[]{3, 5, 7, 9, 11, 15, 19, 23, 28};
 
     public RayPath(double[][] rayEntry)
     {
@@ -36,28 +42,6 @@ public class RayPath {
         int count = 0;
         int[][] COIHexagonIndex = atomCreator.getCOIHexagonIndex();
         double[][] xyCoordinates = atomCreator.getXyLocation();
-        double[][][] hexagonsRayEntries = new double[24][3][2]; // Double array for storing ray entries for each hexagon
-        final int[] EdgeLocations = new int[]{1, 2, 3, 4, 5, 6, 11, 12, 18, 19, 26, 27, 35, 36, 43, 44, 50, 51, 56, 57, 58, 59, 60, 61}; // integer array of all edge hexagons
-
-        for(int X = 0; X < 24; X++)
-        {
-            int k = 0;
-            for(int Y = 0; Y < 54; Y++)
-            {
-                double distance = Math.abs(Math.hypot(rayEntry[Y][0] - xyCoordinates[0][EdgeLocations[X]], rayEntry[Y][1] - xyCoordinates[1][EdgeLocations[X]]));
-                if(distance < 50 && distance > 40)
-                {
-                    hexagonsRayEntries[X][k][0] = rayEntry[Y][0];
-                    hexagonsRayEntries[X][k][1] = rayEntry[Y][1];
-                    k++;
-                }
-                if(k == 3)
-                {
-                    break;
-                }
-            }
-        }
-
         ArrayList<Line> Rays = new ArrayList<>();
         Rays.add(new Line());
         int index = 0;
@@ -170,20 +154,93 @@ public class RayPath {
             y += addToYCoordinates;
             Rays.get(index).setEndX(x);
             Rays.get(index).setEndY(y);
-
-                for (int i = 0; i < 24; i++) {
-                    for (int j = 0; j < 3; j++) {
-                        boolean areXCoordinatesEq = Math.abs(hexagonsRayEntries[i][j][0] - (Rays.get(index).getEndX() + addToXCoordinates)) <= CircleOfInfluenceTolerance;
-                        boolean areYCoordinatesEq = Math.abs(hexagonsRayEntries[i][j][1] - (Rays.get(index).getEndY() + addToYCoordinates)) <= CircleOfInfluenceTolerance;
-                        if (areXCoordinatesEq && areYCoordinatesEq) {
-                            hexagonEdgeFlag = false;
-                            Rays.get(index).setEndX(Rays.get(index).getEndX() + addToXCoordinates);
-                            Rays.get(index).setEndY(Rays.get(index).getEndY() + addToYCoordinates);
-
-                            break;
-                        }
+            if(addToXCoordinates > 0 || addToYCoordinates > 0) // go to bottom right
+            {
+                for(int z = 0; z < 9; z++)
+                {
+                    double distance = Math.abs(Math.hypot(Rays.get(index).getEndX() - rayEntry[bottomRightLoc[z]-1][0], Rays.get(index).getEndY() - rayEntry[bottomRightLoc[z]-1][1]));
+                    if(distance <= 10)
+                    {
+                        hexagonEdgeFlag = false;
+                        Rays.get(index).setEndX(Rays.get(index).getEndX());
+                        Rays.get(index).setEndY(Rays.get(index).getEndY());
+                        break;
                     }
                 }
+            }
+            if(addToXCoordinates > 0 || addToYCoordinates == 0) // go to right
+            {
+                for(int z = 0; z < 9; z++)
+                {
+                    double distance = Math.abs(Math.hypot(Rays.get(index).getEndX() - rayEntry[rightLoc[z]-1][0], Rays.get(index).getEndY() - rayEntry[rightLoc[z]-1][1]));
+                    if(distance <= 10)
+                    {
+                        hexagonEdgeFlag = false;
+                        Rays.get(index).setEndX(Rays.get(index).getEndX());
+                        Rays.get(index).setEndY(Rays.get(index).getEndY());
+                        break;
+                    }
+                }
+
+            }
+            if(addToXCoordinates > 0 || addToYCoordinates < 0) // go to top right
+            {
+                for(int z = 0; z < 9; z++)
+                {
+                    double distance = Math.abs(Math.hypot(Rays.get(index).getEndX() - rayEntry[topRightLoc[z]-1][0], Rays.get(index).getEndY() - rayEntry[topRightLoc[z]-1][1]));
+                    if(distance <= 10)
+                    {
+                        hexagonEdgeFlag = false;
+                        Rays.get(index).setEndX(Rays.get(index).getEndX());
+                        Rays.get(index).setEndY(Rays.get(index).getEndY());
+                        break;
+                    }
+                }
+            }
+            if(addToXCoordinates < 0 || addToYCoordinates < 0) // go to top left
+            {
+                for(int z = 0; z < 9; z++)
+                {
+                    double distance = Math.abs(Math.hypot(Rays.get(index).getEndX() - rayEntry[topLeftLoc[z]-1][0], Rays.get(index).getEndY() - rayEntry[topLeftLoc[z]-1][1]));
+                    if(distance <= 10)
+                    {
+                        hexagonEdgeFlag = false;
+                        Rays.get(index).setEndX(Rays.get(index).getEndX());
+                        Rays.get(index).setEndY(Rays.get(index).getEndY());
+                        break;
+                    }
+                }
+            }
+            if(addToXCoordinates < 0 || addToYCoordinates == 0) // go to left
+            {
+                for(int z = 0; z < 9; z++)
+                {
+                    double distance = Math.abs(Math.hypot(Rays.get(index).getEndX() - rayEntry[leftLoc[z]-1][0], Rays.get(index).getEndY() - rayEntry[leftLoc[z]-1][1]));
+                    if(distance <= 10)
+                    {
+                        hexagonEdgeFlag = false;
+                        Rays.get(index).setEndX(Rays.get(index).getEndX());
+                        Rays.get(index).setEndY(Rays.get(index).getEndY());
+                        break;
+                    }
+                }
+            }
+            if(addToXCoordinates < 0 || addToYCoordinates > 0) // go to bottom left
+            {
+                for(int z = 0; z < 9; z++)
+                {
+                    double distance = Math.abs(Math.hypot(Rays.get(index).getEndX() - rayEntry[bottomLeftLoc[z]-1][0], Rays.get(index).getEndY() - rayEntry[bottomLeftLoc[z]-1][1]));
+                    if(distance <= 10)
+                    {
+                        hexagonEdgeFlag = false;
+                        Rays.get(index).setEndX(Rays.get(index).getEndX());
+                        Rays.get(index).setEndY(Rays.get(index).getEndY());
+                        entries[bottomLeftLoc[z]-1].setFill(Color.PURPLE);
+                        entries[bottomLeftLoc[z]-1].setMouseTransparent(true);
+                        break;
+                    }
+                }
+            }
         }
 
 
@@ -194,9 +251,10 @@ public class RayPath {
         rayMarkerCount+=2;
 
         //Sets ray invisible
-        //Ray.setVisible(false);
+        //Rays.get(index).setVisible(false);
 
         //An entry can only send 1 ray
+        entries[EntryNum].setFill(Color.PURPLE);
         entries[EntryNum].setMouseTransparent(true);
     }
 
