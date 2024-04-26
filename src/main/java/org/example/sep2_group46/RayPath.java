@@ -132,6 +132,7 @@ public class RayPath {
                         Rays.get(index).setEndX(x + differenceX);
                         Rays.get(index).setEndY(y + differenceY);
 
+                        Rays.get(index).setVisible(false);
                         //Adds ray to board
                         Board.getChildren().add(Rays.get(index));
                         entries[EntryNum].setMouseTransparent(true);
@@ -182,6 +183,7 @@ public class RayPath {
                                         Rays.get(index).setEndX(x + differenceX2);
                                         Rays.get(index).setEndY(y + differenceY2);
 
+                                        Rays.get(index).setVisible(false);
                                         //Adds ray to board
                                         Board.getChildren().add(Rays.get(index));
                                         entries[EntryNum].setMouseTransparent(true);
@@ -195,6 +197,7 @@ public class RayPath {
                             indx[0] = adjacentHexagon;
                             indx[1] = countAndSecondOccurrence[1];
 
+                            Rays.get(index).setVisible(false);
                             //Adds previous ray to pane
                             Board.getChildren().add(Rays.get(index++));
 
@@ -235,6 +238,7 @@ public class RayPath {
                         entries[EntryNum].setFill(colorsForRayMarker());
                         entries[EntryNum].setMouseTransparent(true);
                         colorIndex++;
+                        Rays.get(index).setVisible(false);
                         Board.getChildren().add(Rays.get(index));
                         return;
                     }
@@ -255,6 +259,7 @@ public class RayPath {
                         entries[EntryNum].setFill(colorsForRayMarker());
                         entries[EntryNum].setMouseTransparent(true);
                         colorIndex++;
+                        Rays.get(index).setVisible(false);
                         Board.getChildren().add(Rays.get(index));
                         return;
                     }
@@ -276,6 +281,7 @@ public class RayPath {
                         entries[EntryNum].setFill(colorsForRayMarker());
                         entries[EntryNum].setMouseTransparent(true);
                         colorIndex++;
+                        Rays.get(index).setVisible(false);
                         Board.getChildren().add(Rays.get(index));
                         return;
                     }
@@ -296,6 +302,7 @@ public class RayPath {
                         entries[EntryNum].setFill(colorsForRayMarker());
                         entries[EntryNum].setMouseTransparent(true);
                         colorIndex++;
+                        Rays.get(index).setVisible(false);
                         Board.getChildren().add(Rays.get(index));
                         return;
                     }
@@ -316,6 +323,7 @@ public class RayPath {
                         entries[EntryNum].setFill(colorsForRayMarker());
                         entries[EntryNum].setMouseTransparent(true);
                         colorIndex++;
+                        Rays.get(index).setVisible(false);
                         Board.getChildren().add(Rays.get(index));
                         return;
                     }
@@ -336,6 +344,7 @@ public class RayPath {
                         entries[EntryNum].setFill(colorsForRayMarker());
                         entries[EntryNum].setMouseTransparent(true);
                         colorIndex++;
+                        Rays.get(index).setVisible(false);
                         Board.getChildren().add(Rays.get(index));
                         return;
                     }
@@ -371,6 +380,7 @@ public class RayPath {
     public double[] deflectRay(double addToXCoordinates, double addToYCoordinates, int[] index, int count) {
         double[] Vel = new double[2];
         double directionY = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3);
+        double directionX = Math.sqrt(1875);
 
         int firstContactPoint = index[0];
         int secondContactPoint = index[1];
@@ -448,79 +458,107 @@ public class RayPath {
         else if(count == 2) //two circles of influence are detected
        {
            System.out.println("Second contact point: " + secondContactPoint);
-            if(addToXCoordinates > 0 && addToYCoordinates == 0 && (firstContactPoint == topLeft && secondContactPoint == bottomLeft) || (secondContactPoint == topLeft  && firstContactPoint == bottomLeft))//ray hits top left && bottom left
+            if(addToXCoordinates > 0 && addToYCoordinates == 0)
             {
-               addToXCoordinates = -88;
+                if(firstContactPoint == bottomLeft && secondContactPoint == topLeft || secondContactPoint == bottomLeft && firstContactPoint == topLeft)
+                {
+                    addToYCoordinates = 0;
+                    addToXCoordinates = -88;
+                }
+                else if(firstContactPoint == bottomLeft && secondContactPoint == left || firstContactPoint == left && secondContactPoint == bottomLeft)
+                {
+                    addToYCoordinates = directionY;
+                    addToXCoordinates = directionX * -1;
+                }
+                else if(firstContactPoint == topLeft && secondContactPoint == left || firstContactPoint == left && secondContactPoint == topLeft)
+                {
+                    addToYCoordinates = directionY * -1;
+                    addToXCoordinates = directionX * -1;
+                }
             }
-           else if(addToXCoordinates < 0 && addToYCoordinates == 0 && (secondContactPoint == topRight && firstContactPoint == bottomRight) || (firstContactPoint == topRight && secondContactPoint == bottomRight))//ray hits top right && bottom right
+            else if (addToXCoordinates < 0 && addToYCoordinates == 0)
             {
-                addToXCoordinates = 88;
+                if(firstContactPoint == bottomRight && secondContactPoint == topRight || firstContactPoint == topRight && secondContactPoint == bottomRight)
+                {
+                    addToYCoordinates = 0;
+                    addToXCoordinates = 88;
+                }
+                else if(firstContactPoint == bottomRight && secondContactPoint == right || firstContactPoint == right && secondContactPoint == bottomRight)
+                {
+                    addToYCoordinates = directionY;
+                    addToXCoordinates = directionX;
+                }
+                else if(firstContactPoint == right && secondContactPoint == topRight || firstContactPoint == topRight && secondContactPoint == right)
+                {
+                    addToYCoordinates = directionY * -1;
+                    addToXCoordinates = directionX;
+                }
             }
-           else if(addToXCoordinates < 0 && addToYCoordinates == 0 && (firstContactPoint == right && secondContactPoint == bottomRight) || (secondContactPoint == right && firstContactPoint == bottomRight)) //ray hits bottom right && right
+            else if(addToXCoordinates > 0 && addToYCoordinates > 0)
             {
-                addToYCoordinates = directionY;
-                addToXCoordinates = Math.sqrt(1875);
-            }
-            else if(addToXCoordinates < 0 && addToYCoordinates < 0 && (secondContactPoint == bottomRight && firstContactPoint == right) || (firstContactPoint == bottomRight && secondContactPoint == right))//ray hits bottom right && right
-            {
-                addToYCoordinates = 0;
-                addToXCoordinates = 88;
-            }
-           else if(addToXCoordinates > 0 && addToYCoordinates == 0 && (firstContactPoint == topLeft && secondContactPoint == left) || (secondContactPoint == topLeft && firstContactPoint == left))//ray hits top left && left
-            {
-               addToYCoordinates = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3) * -1;
-               addToXCoordinates = Math.sqrt(1875) * -1;
-            }
-            else if(addToXCoordinates > 0 && addToYCoordinates > 0 && (firstContactPoint == topLeft && secondContactPoint == left) || (secondContactPoint == topLeft && firstContactPoint == left))//ray hits top left && left
-           {
-                addToYCoordinates = 0;
-                addToXCoordinates = -88;
+                if(firstContactPoint == left && secondContactPoint == topRight || firstContactPoint == topRight && secondContactPoint == left)
+                {
+                    addToYCoordinates = 0;
+                    addToXCoordinates = -88;
+                }
+                else if(firstContactPoint == topLeft && secondContactPoint == topRight || firstContactPoint == topRight && secondContactPoint == topLeft)
+                {
+                    addToYCoordinates = directionY * -1;
+                    addToXCoordinates = directionX;
+                }
+                else
+                {
+                    addToYCoordinates *= -1;
+                    addToXCoordinates *= -1;
+                }
 
             }
-            else if(addToXCoordinates > 0 && addToYCoordinates == 0 && (secondContactPoint == bottomLeft && firstContactPoint == left) || (firstContactPoint == bottomLeft && secondContactPoint == left))//ray hits bottom left && left
+            else if(addToXCoordinates < 0 && addToYCoordinates > 0)
             {
-                addToYCoordinates = directionY;
-                addToXCoordinates = Math.sqrt(1875) * -1;
+                if(firstContactPoint == right && secondContactPoint == topRight || firstContactPoint == topRight && secondContactPoint == right)
+                {
+                    addToYCoordinates = 0;
+                    addToXCoordinates = 88;
+                }
+                else if(firstContactPoint == topRight && secondContactPoint == topLeft || firstContactPoint == topLeft && secondContactPoint == topRight)
+                {
+                    addToYCoordinates = directionY * -1;
+                    addToXCoordinates = directionX * -1;
+                }
+                else
+                {
+                    addToYCoordinates *= -1;
+                    addToXCoordinates *= -1;
+                }
             }
-            else if(addToXCoordinates > 0 && addToYCoordinates < 0 && (secondContactPoint == bottomLeft && firstContactPoint == left) || (firstContactPoint == bottomLeft && secondContactPoint == left))//ray hits bottom left && left
+            else if(addToXCoordinates < 0 && addToYCoordinates < 0)
             {
-                addToYCoordinates = 0;
-                addToXCoordinates = -88;
+                if(firstContactPoint == right && secondContactPoint == bottomRight || firstContactPoint == bottomRight && secondContactPoint == right)
+                {
+                    addToYCoordinates = 0;
+                    addToXCoordinates = 88;
+                }
+                else if(firstContactPoint == bottomLeft && secondContactPoint == bottomRight || firstContactPoint == bottomRight && secondContactPoint == bottomLeft)
+                {
+                    addToYCoordinates = directionY;
+                    addToXCoordinates = directionX * -1;
+                }
+                else {
+                    addToYCoordinates *= -1;
+                    addToXCoordinates *= -1;
+                }
             }
-            else if(addToXCoordinates < 0 && addToYCoordinates == 0 && (firstContactPoint == topRight && secondContactPoint == right) || (secondContactPoint == topRight && firstContactPoint == right))//ray hits top right && right
+            else if(addToXCoordinates > 0 && addToYCoordinates < 0)
             {
-                addToYCoordinates = directionY * -1;
-                addToXCoordinates = Math.sqrt(1875);
-            }
-            else if(addToXCoordinates < 0 && addToYCoordinates > 0 && (secondContactPoint == topRight && firstContactPoint == right) || (firstContactPoint == topRight && secondContactPoint == right))//ray hits top right && right
-            {
-                addToYCoordinates = 0;
-                addToXCoordinates = 88;
-            }
-            else if(addToXCoordinates > 0 && (secondContactPoint == topRight && firstContactPoint == topLeft) || (firstContactPoint == topRight && secondContactPoint == topLeft))//ray hits top right && top left
-            {
-                addToYCoordinates = directionY * -1;
-                addToXCoordinates = Math.sqrt(1875);
-            }
-            else if(addToYCoordinates < 0 && (firstContactPoint == topRight && secondContactPoint == topLeft) || (secondContactPoint == topRight && firstContactPoint == topLeft))//ray hits top right && top left
-            {
-                addToYCoordinates = directionY * -1;
-                addToXCoordinates = Math.sqrt(1875) * -1;
-            }
-            else if(addToXCoordinates > 0 && (secondContactPoint == bottomRight && firstContactPoint == bottomLeft) || (firstContactPoint == bottomRight && secondContactPoint == bottomLeft)) //ray hits bottom right && bottom left
-            {
-               addToYCoordinates = directionY;
-               addToXCoordinates = Math.sqrt(1875);
-            }
-            else if(addToYCoordinates < 0 && (firstContactPoint == bottomRight && secondContactPoint == bottomLeft) || (secondContactPoint == bottomRight && firstContactPoint == bottomLeft))//ray hits bottom right && bottom left
-            {
-                addToYCoordinates = directionY;
-                addToXCoordinates = Math.sqrt(1875) * -1;
-            }
-            else if(((secondContactPoint == topLeft && firstContactPoint == bottomRight) || (firstContactPoint == topLeft && secondContactPoint == topRight)) || ((secondContactPoint == bottomLeft && firstContactPoint == topRight) || (secondContactPoint == topRight && firstContactPoint == bottomLeft)))// hit top left && bottom right || hit bottom left && top right
-           {
-                addToXCoordinates = addToXCoordinates * -1;
-                addToYCoordinates = addToYCoordinates * -1;
+                if(firstContactPoint == bottomLeft && secondContactPoint == bottomRight || firstContactPoint ==bottomRight && secondContactPoint == bottomLeft){
+                    addToYCoordinates = directionY;
+                    addToXCoordinates = directionX;
+                }
+                else
+                {
+                    addToYCoordinates *= -1;
+                    addToXCoordinates *= -1;
+                }
             }
         }
         else if(count == 3)//three circles of influence are detected
