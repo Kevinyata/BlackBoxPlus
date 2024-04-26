@@ -75,6 +75,8 @@ public class RayPath {
         Rays.add(new Line());
         int index = 0;
 
+        int count = 0;
+
         //Initialises base ray
         Rays.get(index).setStartX(x);
         Rays.get(index).setStartY(y);
@@ -97,11 +99,48 @@ public class RayPath {
             }
         }
 
-        double AbsorptionTolerance = 10;
-        double CircleOfInfluenceTolerance = 8;
+        double AbsorptionTolerance = 15;
+        double CircleOfInfluenceTolerance = 15;
         boolean isDeflectedFlag = false;
 
         while(true) {
+            
+            x += addToXCoordinates;
+            y += addToYCoordinates;
+            Rays.get(index).setEndX(x);
+            Rays.get(index).setEndY(y);
+
+            if(count == 0) {
+                //Checks if ray is absorbed
+                for (int atomNumber = 0; atomNumber < 6; atomNumber++) {
+                    //See if coordinates of endpoint of a line approximately matches the coordinates of the centre of the atom
+                    boolean areXCoordinatesEqual;
+                    boolean areYCoordinatesEqual;
+
+                    areXCoordinatesEqual = Math.abs(Molecule[atomNumber].getTranslateX() - Rays.get(index).getEndX()) <= AbsorptionTolerance;
+                    areYCoordinatesEqual = Math.abs(Rays.get(index).getEndY() - Molecule[atomNumber].getTranslateY()) <= AbsorptionTolerance;
+                    count++;
+
+                    boolean isAbsorbed = (areXCoordinatesEqual && areYCoordinatesEqual);
+                    if (isAbsorbed) {
+                        //Marks the entry as absorbed
+                        entries[EntryNum].setFill(Color.RED);
+
+                        //Adjusts ray endpoint at middle of atom appropriately
+                        double differenceX = Molecule[atomNumber].getTranslateX() - Rays.get(index).getEndX();
+                        double differenceY = Molecule[atomNumber].getTranslateY() - Rays.get(index).getEndY();
+                        Rays.get(index).setEndX(x + differenceX);
+                        Rays.get(index).setEndY(y + differenceY);
+
+                        //Adds ray to board
+                        Board.getChildren().add(Rays.get(index));
+                        entries[EntryNum].setMouseTransparent(true);
+                        rayMarkerCount++;
+                        return;
+                    }
+                }
+            }
+
             //Checks if ray is deflected
             for (int atomNumber = 0; atomNumber < 6; atomNumber++) {
                 for (int adjacentHexagon = 0; adjacentHexagon < 6; adjacentHexagon++) {
@@ -121,6 +160,36 @@ public class RayPath {
                             Rays.get(index).setEndX(x + differenceX);
                             Rays.get(index).setEndY(y + differenceY);
 
+                            if(countAndSecondOccurrence[0] == 1)
+                            {
+                                //Checks if ray is absorbed
+                                for (int atomNumbers = 0; atomNumbers < 6; atomNumbers++) {
+                                    //See if coordinates of endpoint of a line approximately matches the coordinates of the centre of the atom
+                                    boolean areXCoordinatesEqual2;
+                                    boolean areYCoordinatesEqual2;
+
+                                    areXCoordinatesEqual2 = Math.abs(Molecule[atomNumbers].getTranslateX() - (Rays.get(index).getEndX() + addToXCoordinates*2)) <= AbsorptionTolerance;
+                                    areYCoordinatesEqual2 = Math.abs((Rays.get(index).getEndY() + addToYCoordinates*2) - Molecule[atomNumbers].getTranslateY()) <= AbsorptionTolerance;
+
+                                    boolean isAbsorbed = (areXCoordinatesEqual2 && areYCoordinatesEqual2);
+                                    if (isAbsorbed) {
+                                        //Marks the entry as absorbed
+                                        entries[EntryNum].setFill(Color.RED);
+
+                                        //Adjusts ray endpoint at middle of atom appropriately
+                                        double differenceX2 = Molecule[atomNumber].getTranslateX() - Rays.get(index).getEndX();
+                                        double differenceY2 = Molecule[atomNumber].getTranslateY() - Rays.get(index).getEndY();
+                                        Rays.get(index).setEndX(x + differenceX2);
+                                        Rays.get(index).setEndY(y + differenceY2);
+
+                                        //Adds ray to board
+                                        Board.getChildren().add(Rays.get(index));
+                                        entries[EntryNum].setMouseTransparent(true);
+                                        rayMarkerCount++;
+                                        return;
+                                    }
+                                }
+                            }
 
                             int[] indx = new int[2];
                             indx[0] = adjacentHexagon;
@@ -130,7 +199,7 @@ public class RayPath {
                             Board.getChildren().add(Rays.get(index++));
 
                             //For debugging
-                            System.out.println("\nHexagon index: " + adjacentHexagon);
+                            System.out.println("\nFirst Contact Point: " + adjacentHexagon);
                             System.out.println("count: " + countAndSecondOccurrence[0]);
 
                             //Deflects ray appropriately and creates a new line to simulate that deflection
@@ -150,37 +219,6 @@ public class RayPath {
                     break;
             }
 
-            //Checks if ray is absorbed
-            for (int atomNumber = 0; atomNumber < 6; atomNumber++) {
-                //See if coordinates of endpoint of a line approximately matches the coordinates of the centre of the atom
-                boolean areXCoordinatesEqual = Math.abs(Molecule[atomNumber].getTranslateX() - (Rays.get(index).getEndX() + addToXCoordinates*2)) <= AbsorptionTolerance;
-                boolean areYCoordinatesEqual = Math.abs((Rays.get(index).getEndY() + addToYCoordinates*2) - Molecule[atomNumber].getTranslateY()) <= AbsorptionTolerance;
-                boolean areXCoordinatesEqual2 = Math.abs(Molecule[atomNumber].getTranslateX() - Rays.get(index).getEndX()) <= AbsorptionTolerance;
-                boolean areYCoordinatesEqual2 = Math.abs(Rays.get(index).getEndY() - Molecule[atomNumber].getTranslateY()) <= AbsorptionTolerance;
-                boolean isAbsorbed = (areXCoordinatesEqual && areYCoordinatesEqual) || (areXCoordinatesEqual2 && areYCoordinatesEqual2);
-                if (isAbsorbed) {
-                    //Marks the entry as absorbed
-                    entries[EntryNum].setFill(Color.RED);
-
-                    //Adjusts ray endpoint at middle of atom appropriately
-                    double differenceX = Molecule[atomNumber].getTranslateX() - Rays.get(index).getEndX();
-                    double differenceY = Molecule[atomNumber].getTranslateY() - Rays.get(index).getEndY();
-                    Rays.get(index).setEndX(x + differenceX);
-                    Rays.get(index).setEndY(y + differenceY);
-
-                    //Adds ray to board
-                    Board.getChildren().add(Rays.get(index));
-                    entries[EntryNum].setMouseTransparent(true);
-                    rayMarkerCount++;
-                    return;
-                }
-            }
-
-            //Ray continues to travel until entry endpoint
-            x += addToXCoordinates;
-            y += addToYCoordinates;
-            Rays.get(index).setEndX(x);
-            Rays.get(index).setEndY(y);
 
             if(addToXCoordinates > 0 || addToYCoordinates > 0) // go to bottom right
             {
@@ -198,7 +236,6 @@ public class RayPath {
                         entries[EntryNum].setMouseTransparent(true);
                         colorIndex++;
                         Board.getChildren().add(Rays.get(index));
-                        //Rays.forEach(ray -> ray.setVisible(false));
                         return;
                     }
                 }
@@ -311,13 +348,17 @@ public class RayPath {
     {
         //counts the amount of circle of influences that intersect at hexagon location key
         int count = 0;
+        boolean flag = false;
         int[] countAndSecondOccurrence = new int[2];
         for(int atomNumber = 0; atomNumber < 6; atomNumber++) {
             for (int adjacentHexagon = 0; adjacentHexagon < 6; adjacentHexagon++) {
-                if (HexagonsIndex[atomNumber][adjacentHexagon] == key)
+                if (HexagonsIndex[atomNumber][adjacentHexagon] == key) {
                     count++;
-                if(count == 2)
-                    countAndSecondOccurrence[1] = adjacentHexagon;
+                    if(count == 2 && !flag) {
+                        countAndSecondOccurrence[1] = adjacentHexagon;
+                        flag = true;
+                    }
+                }
             }
         }
         countAndSecondOccurrence[0] = count;
@@ -406,75 +447,77 @@ public class RayPath {
         }
         else if(count == 2) //two circles of influence are detected
        {
+           System.out.println("Second contact point: " + secondContactPoint);
             if(addToXCoordinates > 0 && addToYCoordinates == 0 && (firstContactPoint == topLeft && secondContactPoint == bottomLeft) || (secondContactPoint == topLeft  && firstContactPoint == bottomLeft))//ray hits top left && bottom left
             {
                addToXCoordinates = -88;
             }
-           if(addToXCoordinates < 0 && addToYCoordinates == 0 && (secondContactPoint == topRight && firstContactPoint == bottomRight) || (firstContactPoint == topRight && secondContactPoint == bottomRight))//ray hits top right && bottom right
+           else if(addToXCoordinates < 0 && addToYCoordinates == 0 && (secondContactPoint == topRight && firstContactPoint == bottomRight) || (firstContactPoint == topRight && secondContactPoint == bottomRight))//ray hits top right && bottom right
             {
                 addToXCoordinates = 88;
             }
-           if(addToXCoordinates < 0 && addToYCoordinates == 0 && (firstContactPoint == right && secondContactPoint == bottomRight) || (firstContactPoint == bottomRight && secondContactPoint == right)) //ray hits bottom right && right
+           else if(addToXCoordinates < 0 && addToYCoordinates == 0 && (firstContactPoint == right && secondContactPoint == bottomRight) || (secondContactPoint == right && firstContactPoint == bottomRight)) //ray hits bottom right && right
             {
                 addToYCoordinates = directionY;
                 addToXCoordinates = Math.sqrt(1875);
             }
-            if(addToXCoordinates < 0 && addToYCoordinates < 0 && (secondContactPoint == bottomRight && firstContactPoint == right) || (firstContactPoint == bottomRight && secondContactPoint == right))//ray hits bottom right && right
+            else if(addToXCoordinates < 0 && addToYCoordinates < 0 && (secondContactPoint == bottomRight && firstContactPoint == right) || (firstContactPoint == bottomRight && secondContactPoint == right))//ray hits bottom right && right
             {
                 addToYCoordinates = 0;
                 addToXCoordinates = 88;
             }
-           if(addToXCoordinates > 0 && addToYCoordinates == 0 && (firstContactPoint == topLeft && secondContactPoint == left) || (secondContactPoint == topLeft && firstContactPoint == left))//ray hits top left && left
+           else if(addToXCoordinates > 0 && addToYCoordinates == 0 && (firstContactPoint == topLeft && secondContactPoint == left) || (secondContactPoint == topLeft && firstContactPoint == left))//ray hits top left && left
             {
                addToYCoordinates = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3) * -1;
                addToXCoordinates = Math.sqrt(1875) * -1;
             }
-            if(addToXCoordinates > 0 && addToYCoordinates > 0 && (firstContactPoint == topLeft && secondContactPoint == left) || (secondContactPoint == topLeft && firstContactPoint == left))//ray hits top left && left
+            else if(addToXCoordinates > 0 && addToYCoordinates > 0 && (firstContactPoint == topLeft && secondContactPoint == left) || (secondContactPoint == topLeft && firstContactPoint == left))//ray hits top left && left
            {
                 addToYCoordinates = 0;
                 addToXCoordinates = -88;
+
             }
-            if(addToXCoordinates > 0 && addToYCoordinates == 0 && (secondContactPoint == bottomLeft && firstContactPoint == left) || (firstContactPoint == bottomLeft && secondContactPoint == left))//ray hits bottom left && left
+            else if(addToXCoordinates > 0 && addToYCoordinates == 0 && (secondContactPoint == bottomLeft && firstContactPoint == left) || (firstContactPoint == bottomLeft && secondContactPoint == left))//ray hits bottom left && left
             {
                 addToYCoordinates = directionY;
                 addToXCoordinates = Math.sqrt(1875) * -1;
             }
-            if(addToXCoordinates > 0 && addToYCoordinates < 0 && (secondContactPoint == bottomLeft && firstContactPoint == left) || (firstContactPoint == bottomLeft && secondContactPoint == left))//ray hits bottom left && left
+            else if(addToXCoordinates > 0 && addToYCoordinates < 0 && (secondContactPoint == bottomLeft && firstContactPoint == left) || (firstContactPoint == bottomLeft && secondContactPoint == left))//ray hits bottom left && left
             {
                 addToYCoordinates = 0;
                 addToXCoordinates = -88;
             }
-            if(addToXCoordinates < 0 && addToYCoordinates == 0 && (secondContactPoint == topRight && firstContactPoint == right) || (firstContactPoint == topRight && secondContactPoint == right))//ray hits top right && right
+            else if(addToXCoordinates < 0 && addToYCoordinates == 0 && (firstContactPoint == topRight && secondContactPoint == right) || (secondContactPoint == topRight && firstContactPoint == right))//ray hits top right && right
             {
                 addToYCoordinates = directionY * -1;
                 addToXCoordinates = Math.sqrt(1875);
             }
-            if(addToXCoordinates < 0 && addToYCoordinates > 0 && (secondContactPoint == topRight && firstContactPoint == right) || (firstContactPoint == topRight && secondContactPoint == right))//ray hits top right && right
+            else if(addToXCoordinates < 0 && addToYCoordinates > 0 && (secondContactPoint == topRight && firstContactPoint == right) || (firstContactPoint == topRight && secondContactPoint == right))//ray hits top right && right
             {
                 addToYCoordinates = 0;
                 addToXCoordinates = 88;
             }
-            if(addToXCoordinates > 0 && (secondContactPoint == topRight && firstContactPoint == topLeft) || (firstContactPoint == topRight && secondContactPoint == topLeft))//ray hits top right && top left
+            else if(addToXCoordinates > 0 && (secondContactPoint == topRight && firstContactPoint == topLeft) || (firstContactPoint == topRight && secondContactPoint == topLeft))//ray hits top right && top left
             {
                 addToYCoordinates = directionY * -1;
                 addToXCoordinates = Math.sqrt(1875);
             }
-            if(addToXCoordinates < 0 && (firstContactPoint == topRight && secondContactPoint == topLeft) || (secondContactPoint == topRight && firstContactPoint == topLeft))//ray hits top right && top left
+            else if(addToYCoordinates < 0 && (firstContactPoint == topRight && secondContactPoint == topLeft) || (secondContactPoint == topRight && firstContactPoint == topLeft))//ray hits top right && top left
             {
                 addToYCoordinates = directionY * -1;
                 addToXCoordinates = Math.sqrt(1875) * -1;
             }
-            if(addToXCoordinates > 0 && (secondContactPoint == bottomRight && firstContactPoint == bottomLeft) || (firstContactPoint == bottomRight && secondContactPoint == bottomLeft)) //ray hits bottom right && bottom left
+            else if(addToXCoordinates > 0 && (secondContactPoint == bottomRight && firstContactPoint == bottomLeft) || (firstContactPoint == bottomRight && secondContactPoint == bottomLeft)) //ray hits bottom right && bottom left
             {
                addToYCoordinates = directionY;
                addToXCoordinates = Math.sqrt(1875);
             }
-            if(addToXCoordinates < 0 && (firstContactPoint == bottomRight && secondContactPoint == bottomLeft) || (secondContactPoint == bottomRight && firstContactPoint == bottomLeft))//ray hits bottom right && bottom left
+            else if(addToYCoordinates < 0 && (firstContactPoint == bottomRight && secondContactPoint == bottomLeft) || (secondContactPoint == bottomRight && firstContactPoint == bottomLeft))//ray hits bottom right && bottom left
             {
                 addToYCoordinates = directionY;
                 addToXCoordinates = Math.sqrt(1875) * -1;
             }
-            if(((secondContactPoint == topLeft && firstContactPoint == bottomRight) || (firstContactPoint == topLeft && secondContactPoint == topRight)) || ((secondContactPoint == bottomLeft && firstContactPoint == topRight) || (secondContactPoint == topRight && firstContactPoint == bottomLeft)))// hit top left && bottom right || hit bottom left && top right
+            else if(((secondContactPoint == topLeft && firstContactPoint == bottomRight) || (firstContactPoint == topLeft && secondContactPoint == topRight)) || ((secondContactPoint == bottomLeft && firstContactPoint == topRight) || (secondContactPoint == topRight && firstContactPoint == bottomLeft)))// hit top left && bottom right || hit bottom left && top right
            {
                 addToXCoordinates = addToXCoordinates * -1;
                 addToYCoordinates = addToYCoordinates * -1;
