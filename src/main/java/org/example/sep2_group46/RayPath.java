@@ -17,6 +17,7 @@ public class RayPath {
     final int[] bottomLeftLoc = new int[]{27, 32, 36, 40, 45, 47, 49, 51, 54};
     final int[] topRightLoc = new int[]{3, 5, 7, 9, 11, 15, 19, 23, 28};
     int colorIndex = 0;
+
     Color[] colorsForRayMarkers = {
             Color.TURQUOISE,
             Color.GREEN,
@@ -110,6 +111,7 @@ public class RayPath {
             Rays.get(index).setEndX(x);
             Rays.get(index).setEndY(y);
 
+            //Checks for the first half hexagon
             if(count == 0) {
                 //Checks if ray is absorbed
                 for (int atomNumber = 0; atomNumber < 6; atomNumber++) {
@@ -161,7 +163,7 @@ public class RayPath {
                             Rays.get(index).setEndX(x + differenceX);
                             Rays.get(index).setEndY(y + differenceY);
 
-                            if(countAndSecondOccurrence[0] == 1)
+                            if(countAndSecondOccurrence[0] == 1) //If a circle of influence hit is detected
                             {
                                 //Checks if ray is absorbed
                                 for (int atomNumbers = 0; atomNumbers < 6; atomNumbers++) {
@@ -194,10 +196,12 @@ public class RayPath {
                             }
 
                             int[] indx = new int[2];
-                            indx[0] = adjacentHexagon;
-                            indx[1] = countAndSecondOccurrence[1];
+                            indx[0] = adjacentHexagon; //where ray hits first circle of influence
+                            indx[1] = countAndSecondOccurrence[1]; //where ray hits second circle of influence
 
+                            //Ray is set invisible
                             Rays.get(index).setVisible(false);
+
                             //Adds previous ray to pane
                             Board.getChildren().add(Rays.get(index++));
 
@@ -205,11 +209,12 @@ public class RayPath {
                             System.out.println("\nFirst Contact Point: " + adjacentHexagon);
                             System.out.println("count: " + countAndSecondOccurrence[0]);
 
-                            //Deflects ray appropriately and creates a new line to simulate that deflection
+                            //Deflects ray appropriately
                             double[] Vel = deflectRay(addToXCoordinates, addToYCoordinates, indx, countAndSecondOccurrence[0]);
                             addToYCoordinates = Vel[1] / 2;
                             addToXCoordinates = Vel[0] / 2;
 
+                           //creates a new line to simulate that deflection
                             Rays.add(new Line());
                             Rays.get(index).setStartX(Rays.get(index - 1).getEndX());
                             Rays.get(index).setStartY(Rays.get(index - 1).getEndY());
@@ -218,7 +223,7 @@ public class RayPath {
                             break;
                     }
                 }
-                if(isDeflectedFlag)
+                if(isDeflectedFlag) //break loop if a deflection is found
                     break;
             }
 
@@ -230,6 +235,7 @@ public class RayPath {
                     double distance = Math.abs(Math.hypot(Rays.get(index).getEndX() - rayEntry[bottomRightLoc[z]-1][0], Rays.get(index).getEndY() - rayEntry[bottomRightLoc[z]-1][1]));
                     if(distance <= 10)
                     {
+                        //ray ends and is set invisible, colours of entries are changed  and set, so they can no longer be clicked
                         rayMarkerCount+=2;
                         Rays.get(index).setEndX(Rays.get(index).getEndX());
                         Rays.get(index).setEndY(Rays.get(index).getEndY());
@@ -251,6 +257,7 @@ public class RayPath {
                     double distance = Math.abs(Math.hypot(Rays.get(index).getEndX() - rayEntry[rightLoc[z]-1][0], Rays.get(index).getEndY() - rayEntry[rightLoc[z]-1][1]));
                     if(distance <= 10)
                     {
+                        //ray ends and is set invisible, colours of entries are changed  and set, so they can no longer be clicked
                         rayMarkerCount+=2;
                         Rays.get(index).setEndX(Rays.get(index).getEndX());
                         Rays.get(index).setEndY(Rays.get(index).getEndY());
@@ -273,6 +280,7 @@ public class RayPath {
                     double distance = Math.abs(Math.hypot(Rays.get(index).getEndX() - rayEntry[topRightLoc[z]-1][0], Rays.get(index).getEndY() - rayEntry[topRightLoc[z]-1][1]));
                     if(distance <= 10)
                     {
+                        //ray ends and is set invisible, colours of entries are changed  and set, so they can no longer be clicked
                         rayMarkerCount+=2;
                         Rays.get(index).setEndX(Rays.get(index).getEndX());
                         Rays.get(index).setEndY(Rays.get(index).getEndY());
@@ -294,6 +302,7 @@ public class RayPath {
                     double distance = Math.abs(Math.hypot(Rays.get(index).getEndX() - rayEntry[topLeftLoc[z]-1][0], Rays.get(index).getEndY() - rayEntry[topLeftLoc[z]-1][1]));
                     if(distance <= 10)
                     {
+                        //ray ends and is set invisible, colours of entries are changed  and set, so they can no longer be clicked
                         rayMarkerCount+=2;
                         Rays.get(index).setEndX(Rays.get(index).getEndX());
                         Rays.get(index).setEndY(Rays.get(index).getEndY());
@@ -315,6 +324,7 @@ public class RayPath {
                     double distance = Math.abs(Math.hypot(Rays.get(index).getEndX() - rayEntry[leftLoc[z]-1][0], Rays.get(index).getEndY() - rayEntry[leftLoc[z]-1][1]));
                     if(distance <= 10)
                     {
+                        //ray ends and is set invisible, colours of entries are changed  and set, so they can no longer be clicked
                         rayMarkerCount+=2;
                         Rays.get(index).setEndX(Rays.get(index).getEndX());
                         Rays.get(index).setEndY(Rays.get(index).getEndY());
@@ -336,6 +346,7 @@ public class RayPath {
                     double distance = Math.abs(Math.hypot(Rays.get(index).getEndX() - rayEntry[bottomLeftLoc[z]-1][0], Rays.get(index).getEndY() - rayEntry[bottomLeftLoc[z]-1][1]));
                     if(distance <= 10)
                     {
+                        //ray ends and is set invisible, colours of entries are changed  and set, so they can no longer be clicked
                         rayMarkerCount+=2;
                         Rays.get(index).setEndX(Rays.get(index).getEndX());
                         Rays.get(index).setEndY(Rays.get(index).getEndY());
@@ -458,7 +469,7 @@ public class RayPath {
         else if(count == 2) //two circles of influence are detected
        {
            System.out.println("Second contact point: " + secondContactPoint);
-            if(addToXCoordinates > 0 && addToYCoordinates == 0)
+            if(addToXCoordinates > 0 && addToYCoordinates == 0) //ray coming from west cases
             {
                 if(firstContactPoint == bottomLeft && secondContactPoint == topLeft || secondContactPoint == bottomLeft && firstContactPoint == topLeft)
                 {
@@ -476,7 +487,7 @@ public class RayPath {
                     addToXCoordinates = directionX * -1;
                 }
             }
-            else if (addToXCoordinates < 0 && addToYCoordinates == 0)
+            else if (addToXCoordinates < 0 && addToYCoordinates == 0) //ray coming from east cases
             {
                 if(firstContactPoint == bottomRight && secondContactPoint == topRight || firstContactPoint == topRight && secondContactPoint == bottomRight)
                 {
@@ -494,7 +505,7 @@ public class RayPath {
                     addToXCoordinates = directionX;
                 }
             }
-            else if(addToXCoordinates > 0 && addToYCoordinates > 0)
+            else if(addToXCoordinates > 0 && addToYCoordinates > 0) //ray coming from northwest cases
             {
                 if(firstContactPoint == left && secondContactPoint == topRight || firstContactPoint == topRight && secondContactPoint == left)
                 {
@@ -513,7 +524,7 @@ public class RayPath {
                 }
 
             }
-            else if(addToXCoordinates < 0 && addToYCoordinates > 0)
+            else if(addToXCoordinates < 0 && addToYCoordinates > 0) //ray coming from northeast cases
             {
                 if(firstContactPoint == right && secondContactPoint == topRight || firstContactPoint == topRight && secondContactPoint == right)
                 {
@@ -531,7 +542,7 @@ public class RayPath {
                     addToXCoordinates *= -1;
                 }
             }
-            else if(addToXCoordinates < 0 && addToYCoordinates < 0)
+            else if(addToXCoordinates < 0 && addToYCoordinates < 0) //ray coming from southeast cases
             {
                 if(firstContactPoint == right && secondContactPoint == bottomRight || firstContactPoint == bottomRight && secondContactPoint == right)
                 {
@@ -548,7 +559,7 @@ public class RayPath {
                     addToXCoordinates *= -1;
                 }
             }
-            else if(addToXCoordinates > 0 && addToYCoordinates < 0)
+            else if(addToXCoordinates > 0 && addToYCoordinates < 0) //ray coming from southwest cases
             {
                 if(firstContactPoint == bottomLeft && secondContactPoint == bottomRight || firstContactPoint ==bottomRight && secondContactPoint == bottomLeft){
                     addToYCoordinates = directionY;
