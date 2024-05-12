@@ -394,11 +394,17 @@ public class RayPath {
                         rayMarkerCount+=2;
                         Rays.get(index).setEndX(Rays.get(index).getEndX());
                         Rays.get(index).setEndY(Rays.get(index).getEndY());
-                        entries[bottomLeftLoc[z]-1].setFill(colorsForRayMarker());
-                        entries[bottomLeftLoc[z]-1].setMouseTransparent(true);
-                        entries[EntryNum].setFill(colorsForRayMarker());
+                        //Checks if reflected
+                        if(EntryNum == (bottomLeftLoc[z]-1)) {
+                            entries[EntryNum].setFill(Color.WHITE);
+                        }
+                        else {
+                            entries[bottomLeftLoc[z]-1].setFill(colorsForRayMarker());
+                            entries[bottomLeftLoc[z]-1].setMouseTransparent(true);
+                            entries[EntryNum].setFill(colorsForRayMarker());
+                            colorIndex++;
+                        }
                         entries[EntryNum].setMouseTransparent(true);
-                        colorIndex++;
                         Rays.get(index).setVisible(false);
                         Board.getChildren().add(Rays.get(index));
                         return;
@@ -618,6 +624,11 @@ public class RayPath {
                 if(firstContactPoint == bottomLeft && secondContactPoint == bottomRight || firstContactPoint ==bottomRight && secondContactPoint == bottomLeft){
                     addToYCoordinates = directionY;
                     addToXCoordinates = directionX;
+                }
+                else if(firstContactPoint == bottomLeft && secondContactPoint == left || firstContactPoint == left && secondContactPoint == bottomLeft)
+                {
+                    addToYCoordinates = 0;
+                    addToXCoordinates = -88;
                 }
                 else
                 {
