@@ -250,11 +250,18 @@ public class RayPath {
                         rayMarkerCount+=2;
                         Rays.get(index).setEndX(Rays.get(index).getEndX());
                         Rays.get(index).setEndY(Rays.get(index).getEndY());
-                        entries[bottomRightLoc[z]-1].setFill(colorsForRayMarker());
-                        entries[bottomRightLoc[z]-1].setMouseTransparent(true);
-                        entries[EntryNum].setFill(colorsForRayMarker());
+
+                        //Checks if reflected
+                        if(EntryNum == (bottomRightLoc[z]-1)) {
+                            entries[EntryNum].setFill(Color.WHITE);
+                        }
+                        else {
+                            entries[bottomRightLoc[z] - 1].setFill(colorsForRayMarker());
+                            entries[bottomRightLoc[z]-1].setMouseTransparent(true);
+                            entries[EntryNum].setFill(colorsForRayMarker());
+                            colorIndex++;
+                        }
                         entries[EntryNum].setMouseTransparent(true);
-                        colorIndex++;
                         Rays.get(index).setVisible(false);
                         Board.getChildren().add(Rays.get(index));
                         return;
@@ -272,11 +279,17 @@ public class RayPath {
                         rayMarkerCount+=2;
                         Rays.get(index).setEndX(Rays.get(index).getEndX());
                         Rays.get(index).setEndY(Rays.get(index).getEndY());
-                        entries[rightLoc[z]-1].setFill(colorsForRayMarker());
-                        entries[rightLoc[z]-1].setMouseTransparent(true);
-                        entries[EntryNum].setFill(colorsForRayMarker());
+                        //Checks if reflected
+                        if(EntryNum == (rightLoc[z]-1)) {
+                            entries[EntryNum].setFill(Color.WHITE);
+                        }
+                        else {
+                            entries[rightLoc[z] - 1].setFill(colorsForRayMarker());
+                            entries[rightLoc[z]-1].setMouseTransparent(true);
+                            entries[EntryNum].setFill(colorsForRayMarker());
+                            colorIndex++;
+                        }
                         entries[EntryNum].setMouseTransparent(true);
-                        colorIndex++;
                         Rays.get(index).setVisible(false);
                         Board.getChildren().add(Rays.get(index));
                         return;
@@ -295,11 +308,19 @@ public class RayPath {
                         rayMarkerCount+=2;
                         Rays.get(index).setEndX(Rays.get(index).getEndX());
                         Rays.get(index).setEndY(Rays.get(index).getEndY());
-                        entries[topRightLoc[z]-1].setFill(colorsForRayMarker());
-                        entries[topRightLoc[z]-1].setMouseTransparent(true);
-                        entries[EntryNum].setFill(colorsForRayMarker());
+
+                        //Checks if reflected
+                        if(EntryNum == (topRightLoc[z]-1)) {
+                            entries[EntryNum].setFill(Color.WHITE);
+                        }
+                        else {
+                            entries[topRightLoc[z] - 1].setFill(colorsForRayMarker());
+                            entries[topRightLoc[z]-1].setMouseTransparent(true);
+                            entries[EntryNum].setFill(colorsForRayMarker());
+                            colorIndex++;
+                        }
+
                         entries[EntryNum].setMouseTransparent(true);
-                        colorIndex++;
                         Rays.get(index).setVisible(false);
                         Board.getChildren().add(Rays.get(index));
                         return;
@@ -317,11 +338,17 @@ public class RayPath {
                         rayMarkerCount+=2;
                         Rays.get(index).setEndX(Rays.get(index).getEndX());
                         Rays.get(index).setEndY(Rays.get(index).getEndY());
-                        entries[topLeftLoc[z]-1].setFill(colorsForRayMarker());
-                        entries[topLeftLoc[z]-1].setMouseTransparent(true);
-                        entries[EntryNum].setFill(colorsForRayMarker());
+                        //Checks if reflected
+                        if(EntryNum == (topLeftLoc[z]-1)) {
+                            entries[EntryNum].setFill(Color.WHITE);
+                        }
+                        else {
+                            entries[topLeftLoc[z] - 1].setFill(colorsForRayMarker());
+                            entries[topLeftLoc[z]-1].setMouseTransparent(true);
+                            entries[EntryNum].setFill(colorsForRayMarker());
+                            colorIndex++;
+                        }
                         entries[EntryNum].setMouseTransparent(true);
-                        colorIndex++;
                         Rays.get(index).setVisible(false);
                         Board.getChildren().add(Rays.get(index));
                         return;
@@ -339,11 +366,17 @@ public class RayPath {
                         rayMarkerCount+=2;
                         Rays.get(index).setEndX(Rays.get(index).getEndX());
                         Rays.get(index).setEndY(Rays.get(index).getEndY());
-                        entries[leftLoc[z]-1].setFill(colorsForRayMarker());
-                        entries[leftLoc[z]-1].setMouseTransparent(true);
-                        entries[EntryNum].setFill(colorsForRayMarker());
+                        //Checks if reflected
+                        if(EntryNum == (leftLoc[z]-1)) {
+                            entries[EntryNum].setFill(Color.WHITE);
+                        }
+                        else {
+                            entries[leftLoc[z] - 1].setFill(colorsForRayMarker());
+                            entries[leftLoc[z]-1].setMouseTransparent(true);
+                            entries[EntryNum].setFill(colorsForRayMarker());
+                            colorIndex++;
+                        }
                         entries[EntryNum].setMouseTransparent(true);
-                        colorIndex++;
                         Rays.get(index).setVisible(false);
                         Board.getChildren().add(Rays.get(index));
                         return;
@@ -379,7 +412,7 @@ public class RayPath {
      * Calculates the amount of circle of influences hit
      * @param HexagonsIndex the array containing all hexagons and their adjacent hexagons
      * @param key the current atom location and their adjacent hexagons
-     * @return the amount of circle of influences hit and the contact point of the 2nd occurrence if there is one
+     * @return array with the amount of circle of influences hit and the contact point of the 2nd occurrence if there is one
      */
     public int[] countOccurrences(int[][] HexagonsIndex, int key)
     {

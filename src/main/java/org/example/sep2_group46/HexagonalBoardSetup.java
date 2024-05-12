@@ -44,6 +44,7 @@ public class HexagonalBoardSetup {
             xyLocation[1][0] = -100;
             int j = 0;
             int k = 0;
+            int hexCounter = 0;
 
             while (j <= 57) {
                 for (int i = 0; i < numHexagons; i++) {
@@ -61,8 +62,9 @@ public class HexagonalBoardSetup {
                     xyLocation[0][i + j + 1] = XLoc + (OffsetX * i);
                     xyLocation[1][i + j + 1] = 200 + OffsetY;
 
-                    // Adding numbering for hexagons
-                    Label hexLabel = getLabel(i);
+                    //Adding numbering for hexagons
+                    Label hexLabel = getLabel(hexCounter, i);
+                    hexCounter++;
 
                     //setting coordinates and labels of the entries coming from the left of the hexagons
                     if((i + j + 1) == 1 || (i + j + 1) == 6 || (i + j + 1) == 12 || (i + j + 1) == 19 || (i + j + 1) == 27 || (i + j + 1) == 36 || (i + j + 1) == 44 || (i + j + 1) == 51 || (i + j + 1) == 57)
@@ -182,13 +184,14 @@ public class HexagonalBoardSetup {
     }
 
     /**
-     * Creates the label for the ray entries
-     * @param i the current hexagon number
-     * @return the hexLabel to be placed on the board
+     * Creates a number label and places it in the appropriate hexagon
+     * @param hexCounter the current hexagon to be numbered
+     * @param i the ith hexagon on a particular row
+     * @return the number label for the hexagon
      */
-    private @NotNull Label getLabel(int i) {
-        Label hexLabel = new Label(rayLabels[i+1]);
-        if(i < 9)
+    private @NotNull Label getLabel(int hexCounter, int i) {
+        Label hexLabel = new Label(rayLabels[hexCounter]);
+        if(hexCounter < 9)
         {
             hexLabel.setLayoutX(XLoc + (OffsetX * i) - 7);
         }
@@ -202,6 +205,7 @@ public class HexagonalBoardSetup {
         hexLabel.setOpacity(0.5);
         return hexLabel;
     }
+
 
     /**
      * Used for getting 6 random hexagons that are used for placing atoms
