@@ -61,6 +61,7 @@ public class BlackBoxPlus extends Application {
      */
     private Button createEndGameButton()
     {
+        //design and location of button
         Button endGameButton = new Button();
         endGameButton.setText("End Game");
         endGameButton.setTextFill(Color.YELLOW);
@@ -68,6 +69,7 @@ public class BlackBoxPlus extends Application {
         endGameButton.setLayoutX(1300);
         endGameButton.setLayoutY(590);
         endGameButton.setPrefSize(150, 50);
+        //When pressed ends game
         endGameButton.setOnAction(e -> System.exit(0));
         return endGameButton;
     }
@@ -80,6 +82,7 @@ public class BlackBoxPlus extends Application {
      */
     private void createGuessButton(Pane Board, RayPath rays, int[] hexagonCoordinates)
     {
+        //Guess button design
         Button guessButton = new Button();
         guessButton.setText("Guess Atoms");
         guessButton.setTextFill(Color.YELLOW);
@@ -87,8 +90,10 @@ public class BlackBoxPlus extends Application {
         guessButton.setLayoutX(1300);
         guessButton.setLayoutY(500);
         guessButton.setPrefSize(150, 50);
+        //When it is clicked
         guessButton.setOnAction(e -> {
             Text GuessPrompt = new Text();
+            //Text for guide for guessing
             GuessPrompt.setText("""
                     Guess Atoms by typing the hexagon numbers you think the atoms are in:
                     Format your guesses like this in the white text box under this prompt
@@ -102,6 +107,7 @@ public class BlackBoxPlus extends Application {
             GuessPrompt.setFill(Color.YELLOW);
             Board.getChildren().add(GuessPrompt);
 
+            //Design and location of text area for guessing
             TextArea GuessPromptArea = new TextArea();
             GuessPromptArea.setEditable(true);
             VBox box = new VBox(GuessPromptArea);
@@ -111,14 +117,18 @@ public class BlackBoxPlus extends Application {
             Board.getChildren().add(box);
             guessButton.setDisable(true);
 
+            //When entered in pressed in textbox
             GuessPromptArea.setOnKeyPressed(keyEvent -> {if(keyEvent.getCode() == KeyCode.ENTER)
             {
+
                 GuessPromptArea.setEditable(false);
                 GuessPromptArea.setMouseTransparent(true);
+
                 String text = GuessPromptArea.getText();
                 int misplacedAtomsCount = 0;
                 String[] hexagonNumbers = text.split("[,\n]");
 
+                //Calculates the amount of misplaced atoms
                 if(hexagonNumbers.length < 6)
                 {
                     misplacedAtomsCount += (6 - hexagonNumbers.length);
@@ -126,12 +136,16 @@ public class BlackBoxPlus extends Application {
 
                 for(int i = 0; i < hexagonNumbers.length; i++) {
                     int finalI = i;
-                    boolean isGuessCorrect = Arrays.stream(hexagonCoordinates).noneMatch(hex -> hex == Integer.parseInt(hexagonNumbers[finalI]));
-                    if(isGuessCorrect)
+                    boolean isGuessIncorrect = Arrays.stream(hexagonCoordinates).noneMatch(hex -> hex == Integer.parseInt(hexagonNumbers[finalI]));
+                    if(isGuessIncorrect)
                         misplacedAtomsCount++;
                 }
 
+                //Sets all items in application visible and unclickable
                 Board.getChildren().forEach(node -> node.setVisible(true));
+                Board.getChildren().forEach(node -> node.setMouseTransparent(true));
+
+                //Score text
                 Text score = new Text();
                 int scoreValue = rays.getRayMarkerCount() + (5 * misplacedAtomsCount);
                 score.setText("Score: " + scoreValue);
@@ -154,6 +168,7 @@ public class BlackBoxPlus extends Application {
      */
     private Button createButtonRelatedToAtoms(AtomCreator atoms)
     {
+        //Location of design of button
         Button b = new Button();
         b.setText("Show Atoms");
         b.setTextFill(Color.YELLOW);
@@ -161,6 +176,8 @@ public class BlackBoxPlus extends Application {
         b.setLayoutX(1300);
         b.setLayoutY(680);
         b.setPrefSize(150, 50);
+
+        //When clicked shows/hide atoms depending on if button's text is show atoms and hide atoms respectively
         b.setOnAction(actionEvent -> {
             if(b.getText().equals("Show Atoms"))
             {
