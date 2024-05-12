@@ -11,6 +11,7 @@ module org.example.sep2_group46 {
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
     requires junit;
+    requires annotations;
 
     opens org.example.sep2_group46 to javafx.fxml;
     exports org.example.sep2_group46;

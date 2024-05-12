@@ -13,12 +13,19 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
-
 import java.util.Arrays;
 
-
+/**
+ * The BlackBoxPlus class starts the game
+ * @author David Ibilola, Kevin Yatagampitiya
+ * Date: May 2024
+ */
 public class BlackBoxPlus extends Application {
 
+    /**
+     * Starts the game opening a new application that has the game
+     * @param primaryStage the application that is open
+     */
     @Override
     public void start(Stage primaryStage) {
         Pane root = new Pane();
@@ -48,6 +55,10 @@ public class BlackBoxPlus extends Application {
         primaryStage.show();
     }
 
+    /**
+     * Creates button the exits the game
+     * @return the end button
+     */
     private Button createEndGameButton()
     {
         Button endGameButton = new Button();
@@ -61,6 +72,12 @@ public class BlackBoxPlus extends Application {
         return endGameButton;
     }
 
+    /**
+     * Creates the button that lets you guess where the atoms are and allows you to type your answer
+     * @param Board used to update the board
+     * @param rays used in calculating how many rays are created for the score
+     * @param hexagonCoordinates used for checking the correct atom placement for the score
+     */
     private void createGuessButton(Pane Board, RayPath rays, int[] hexagonCoordinates)
     {
         Button guessButton = new Button();
@@ -130,6 +147,11 @@ public class BlackBoxPlus extends Application {
         Board.getChildren().add(guessButton);
     }
 
+    /**
+     * Creates the button that hides/shows the atoms
+     * @param atoms used to hide and show the atoms
+     * @return either hide atoms or show atoms depending on if the atoms are shown or not
+     */
     private Button createButtonRelatedToAtoms(AtomCreator atoms)
     {
         Button b = new Button();

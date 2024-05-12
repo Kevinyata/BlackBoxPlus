@@ -7,6 +7,11 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Sphere;
 import java.util.ArrayList;
 
+/**
+ * The RayPath class controls the rays path, when it deflects and when it ends
+ * @author David Ibilola, Kevin Yatagampitiya
+ * Date: May 2024
+ */
 public class RayPath {
     private final double[][] rayEntry; // double array to store the location of the ray entry points;
     private int rayMarkerCount = 0; //Counts the amount of rays sent
@@ -48,11 +53,22 @@ public class RayPath {
             Color.LIGHTCORAL
     };
 
+    /**
+     * Stores a ray entry in the rayEntry double array
+     * @param rayEntry double array that stores the ray entry's number, and it's X and Y location
+     */
     public RayPath(double[][] rayEntry)
     {
-        this.rayEntry =  rayEntry;
+        this.rayEntry = rayEntry;
     }
 
+    /**
+     * The createRayPath method creates the ray path, deflects the ray and ends the ray
+     * @param Board updates the display to highlight ray entrances and exits
+     * @param EntryNum the ray entry number that is clicked
+     * @param entries the array that stores all the ray entry locations
+     * @param atomCreator used for calculating deflections
+     */
     public void createRayPath(Pane Board, int EntryNum, Circle[] entries , AtomCreator atomCreator)
     {
         // loop for storing ray entries for each hexagon
@@ -364,6 +380,12 @@ public class RayPath {
         }
     }
 
+    /**
+     * Calculates the amount of circle of influences hit
+     * @param HexagonsIndex the array containing all hexagons and their adjacent hexagons
+     * @param key the current atom location and their adjacent hexagons
+     * @return the amount of circle of influences hit
+     */
     public int[] countOccurrences(int[][] HexagonsIndex, int key)
     {
         //counts the amount of circle of influences that intersect at hexagon location key
@@ -385,9 +407,14 @@ public class RayPath {
         return countAndSecondOccurrence;
     }
 
-
-
-
+    /**
+     * The deflectRay method changes the current X and Y value based on how many and where the ray hits the circle of influence(s)
+     * @param addToXCoordinates the current X value which will be changed
+     * @param addToYCoordinates the current Y value which will be changed
+     * @param index array of where the circle of influence is hit
+     * @param count the amount of circle of influences hit
+     * @return an array that has the changed X and Y value
+     */
     public double[] deflectRay(double addToXCoordinates, double addToYCoordinates, int[] index, int count) {
         double[] Vel = new double[2];
         double directionY = (2 * Math.sqrt(1875)) * Math.sin(Math.PI/3);
@@ -425,7 +452,7 @@ public class RayPath {
                 addToYCoordinates = 0;
                 addToXCoordinates = 88;
             }
-            else if(addToXCoordinates > 0 && firstContactPoint == 4)
+            else if(addToXCoordinates > 0 && firstContactPoint == topLeft) //If ray hits bottom right
             {
                 addToYCoordinates = directionY * -1;
                 addToXCoordinates = Math.sqrt(1875);
@@ -583,18 +610,22 @@ public class RayPath {
         return Vel;
     }
 
-
+    /**
+     * Used to calculate what direction the ray should move once its created
+     * @param EntryNum the entry that is clicked
+     * @return the direction the ray should move in
+     */
     public double[] CalculateVelocity(int EntryNum)
     {
         double addx = 0;
         double addy = 0;
 
-        int[] arr1 = new int[]{1, 13, 17,21, 25, 31, 35, 39, 43};
+        int[] arr1 = new int[]{1, 13, 17, 21, 25, 31, 35, 39, 43};
         int[] arr2 = new int[]{12, 16, 20, 24, 29, 33, 37, 41, 52};
         int[] arr3 = new int[]{53, 42, 38, 34, 30, 50, 48, 46, 44};
-        int[] arr4 = new int[]{3,5,7,9,11,15,19,23,28};
+        int[] arr4 = new int[]{3, 5, 7, 9, 11, 15, 19, 23, 28};
         int[] arr5 = new int[]{27, 32, 36, 40, 45, 47, 49, 51, 54};
-        int[] arr6 = new int[]{2,4,6, 8, 10, 14,18,22,26};
+        int[] arr6 = new int[]{2, 4, 6, 8, 10, 14, 18, 22, 26};
 
         int EntryCompareValue = EntryNum + 1;
 
@@ -646,10 +677,18 @@ public class RayPath {
         return Velocity;
     }
 
+    /**
+     * Get method
+     * @return the amount of rays
+     */
     public int getRayMarkerCount() {
         return rayMarkerCount;
     }
 
+    /**
+     * returns a colour which is used for ray entries
+     * @return a colour from the colorsForRayMarkers array
+     */
     private Color colorsForRayMarker()
     {
         return colorsForRayMarkers[colorIndex];

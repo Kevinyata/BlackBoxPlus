@@ -5,7 +5,13 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.text.Font;
+import org.jetbrains.annotations.NotNull;
 
+/**
+ * The HexagonalBoardSetup class creates the initial hexagonal board
+ * @author David Ibilola, Kevin Yatagampitiya
+ * Date: May 2024
+ */
 public class HexagonalBoardSetup {
     private final double[][] xyLocation = new double[2][62]; // double array used to store x and y location for atom and circle of influence placement
     private double XLoc = 570; //The initial X location before offset is applied
@@ -20,9 +26,12 @@ public class HexagonalBoardSetup {
     private final int[] EdgeLocations = new int[]{1, 2, 3, 4, 5, 6, 11, 12, 18, 19, 26, 27, 35, 36, 43, 44, 50, 51, 56, 57, 58, 59, 60, 61}; // integer array of all edge hexagons
 
     public HexagonalBoardSetup() {
-
     }
 
+    /**
+     * Creates the board including the hexagons, their labeling, the ray entries and their labeling, and displays it
+     * @param Board used for displaying the board
+     */
     public void createHexagonalBoard(Pane Board) {
         if(!methodCalled) {
             // to store the values in the rayLabels array
@@ -35,7 +44,6 @@ public class HexagonalBoardSetup {
             xyLocation[1][0] = -100;
             int j = 0;
             int k = 0;
-            int hexCounter = 0;
 
             while (j <= 57) {
                 for (int i = 0; i < numHexagons; i++) {
@@ -54,20 +62,7 @@ public class HexagonalBoardSetup {
                     xyLocation[1][i + j + 1] = 200 + OffsetY;
 
                     // Adding numbering for hexagons
-                    Label hexLabel = new Label(rayLabels[hexCounter]);
-                    if(hexCounter < 9)
-                    {
-                        hexLabel.setLayoutX(XLoc + (OffsetX * i) - 7);
-                    }
-                    else
-                    {
-                        hexLabel.setLayoutX(XLoc + (OffsetX * i) - 12);
-                    }
-                    hexLabel.setLayoutY(187 + OffsetY);
-                    hexLabel.setFont(new Font("Arial", 24));
-                    hexLabel.setTextFill(Color.GREY);
-                    hexLabel.setOpacity(0.5);
-                    hexCounter++;
+                    Label hexLabel = getLabel(i);
 
                     //setting coordinates and labels of the entries coming from the left of the hexagons
                     if((i + j + 1) == 1 || (i + j + 1) == 6 || (i + j + 1) == 12 || (i + j + 1) == 19 || (i + j + 1) == 27 || (i + j + 1) == 36 || (i + j + 1) == 44 || (i + j + 1) == 51 || (i + j + 1) == 57)
@@ -185,6 +180,33 @@ public class HexagonalBoardSetup {
             }
         }
     }
+
+    /**
+     * Creates the label for the ray entries
+     * @param i the current hexagon number
+     * @return the hexLabel to be placed on the board
+     */
+    private @NotNull Label getLabel(int i) {
+        Label hexLabel = new Label(rayLabels[i+1]);
+        if(i < 9)
+        {
+            hexLabel.setLayoutX(XLoc + (OffsetX * i) - 7);
+        }
+        else
+        {
+            hexLabel.setLayoutX(XLoc + (OffsetX * i) - 12);
+        }
+        hexLabel.setLayoutY(187 + OffsetY);
+        hexLabel.setFont(new Font("Arial", 24));
+        hexLabel.setTextFill(Color.GREY);
+        hexLabel.setOpacity(0.5);
+        return hexLabel;
+    }
+
+    /**
+     * Used for getting 6 random hexagons that are used for placing atoms
+     * @return an array of the hexagons
+     */
     public int[] randomHexagonCoordinates()
     {
         int min = 1; // setting min for the random numbers
@@ -212,6 +234,11 @@ public class HexagonalBoardSetup {
         return randNum;
     }
 
+    /**
+     * Creates a hexagon of a specific size
+     * @param size the set size for the hexagons
+     * @return the hexagon to be placed on the display
+     */
     private Polygon createHexagon (double size){
         Polygon hexagon = new Polygon();
 
@@ -225,10 +252,18 @@ public class HexagonalBoardSetup {
         return hexagon;
     }
 
+    /**
+     * Get method
+     * @return the hexagons X and Y co-ordinates
+     */
     public double[][] getXyLocation() {
         return xyLocation;
     }
 
+    /**
+     * Get method
+     * @return the ray entries X and Y co-ordinates
+     */
     public double[][] getRayEntry() {
         return rayEntry;
     }

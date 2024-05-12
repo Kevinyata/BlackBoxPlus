@@ -1,14 +1,18 @@
 package org.example.sep2_group46;
 
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Sphere;
 import java.util.Arrays;
 
-public class AtomCreator {
-
+/**
+ * The AtomCreator class creates an atom, and it's circle of influence
+ * @author David Ibilola, Kevin Yatagampitiya
+ * Date: May 2024
+ */
+public class AtomCreator
+{
     //Atoms
     private final Circle[] CirclesOfInfluence;
     private final Sphere[] Molecule;
@@ -16,14 +20,18 @@ public class AtomCreator {
     //array of x and y coordinates
     private final double[][] xyLocation;
 
-    private final int[][] COIHexagonIndex = new int[6][6]; //Stores hexagons locations that every atom's circle of influence touches
-
+    //Stores hexagons locations that every atom's circle of influence touches
+    private final int[][] COIHexagonIndex = new int[6][6];
     //Stores the hexagons locations of the left edge of the board
     private final int[] LeftEdgeLocations = new int[]{1, 6, 12, 19, 27, 36, 44, 51, 57};
 
     //Stores the hexagons locations of the right edge of the board
     private final int[] RightEdgeLocations = new int[]{5, 11, 18, 26, 35, 43, 50, 56, 61};
 
+    /**
+     * Creates an array for the circle of influence, the atom, and it's X and Y co-ordinates
+     * @param xyLocation is used for the atom placement
+     */
     public AtomCreator(double[][] xyLocation)
     {
         this.CirclesOfInfluence = new Circle[6];
@@ -31,12 +39,14 @@ public class AtomCreator {
         this.xyLocation = xyLocation;
     }
 
+    /**
+     * Creates the 6 atoms including their circle of influences, using RandomXY for the placement on the board
+     * @param RandomXY is used for getting a random hexagon to place the atoms
+     */
     public void createAtoms(int[] RandomXY)
     {
-
         //Creates atoms at 6 random hexagon locations
         for(int i = 0; i < 6; i++) {
-
             //calculates the hexagons that an atom's circle of influence touches
             CalculateHexagonsCOIs(RandomXY[i], i);
 
@@ -58,6 +68,11 @@ public class AtomCreator {
         }
     }
 
+    /**
+     * Finds the adjacent cells for each atom with a random location
+     * @param hexagonLocation the random hexagon that the atom is assigned to
+     * @param atomNumber the current atom
+     */
     public void CalculateHexagonsCOIs(int hexagonLocation, int atomNumber)
     {
         //[atomNumber][0] -> hexagon left to hexagon atom is in
@@ -195,22 +210,42 @@ public class AtomCreator {
         System.out.print("\n");
     }
 
+    /**
+     * Get method
+     * @return the atom without the circle of influence
+     */
     public Sphere[] getMolecule() {
         return Molecule;
     }
 
+    /**
+     * Get method
+     * @return the atom's adjacent hexagon locations
+     */
     public int[][] getCOIHexagonIndex() {
         return COIHexagonIndex;
     }
 
+    /**
+     * Get method
+     * @return the X and Y co-ordinates of the atom
+     */
     public double[][] getXyLocation() {
         return xyLocation;
     }
 
+    /**
+     * Get method
+     * @return the atom's circle of influence
+     */
     public Circle[] getCirclesOfInfluence() {
         return CirclesOfInfluence;
     }
 
+    /**
+     * Creates the circle of influence
+     * @return the created circle of influence
+     */
     public Circle createCircleOfInfluence()
     {
         Circle COI = new Circle();
@@ -220,6 +255,10 @@ public class AtomCreator {
         return COI;
     }
 
+    /**
+     * Creates the molecule of the atom
+     * @return the created molecule
+     */
     public Sphere createMolecule()
     {
         Sphere molecule = new Sphere();
@@ -231,6 +270,9 @@ public class AtomCreator {
         return molecule;
     }
 
+    /**
+     * Shows the atoms on the board
+     */
     public void showAtoms()
     {
         for(int i = 0; i < 6; i++)
@@ -240,6 +282,9 @@ public class AtomCreator {
         }
     }
 
+    /**
+     * Hides the atoms on the board
+     */
     public void hideAtoms()
     {
         for(int i = 0; i < 6; i++)

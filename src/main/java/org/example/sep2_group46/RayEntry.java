@@ -4,15 +4,28 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
+/**
+ * The RayEntry class creates all the ray entries
+ * @author David Ibilola, Kevin Yatagampitiya
+ * Date: May 2024
+ */
 public class RayEntry {
     private final double[][] rayEntry; // double array to store the location of the ray entry points
     private final Circle[] entries = new Circle[54]; //array for all entries on the board
 
+    /**
+     * Stores a ray entry in the rayEntry double array
+     * @param rayEntry double array that stores the ray entry's number, and it's X and Y location
+     */
     public RayEntry(double[][] rayEntry)
     {
         this.rayEntry = rayEntry;
     }
 
+    /**
+     * Creates and adds the ray entries to the Board
+     * @param Board used to update the display
+     */
     public void placeRayEntries(Pane Board)
     {
         //Places all entries on the board
@@ -25,6 +38,12 @@ public class RayEntry {
         }
     }
 
+    /**
+     * Allows for the ray entries to be clickable
+     * @param Board used to update the display
+     * @param atomCreator used in the createRayPath function
+     * @return the ray entry which is used in the calculations for the score
+     */
     public RayPath entryRayBuilder(Pane Board, AtomCreator atomCreator)
     {
         RayPath rays = new RayPath(rayEntry);
@@ -36,7 +55,10 @@ public class RayEntry {
         return rays;
     }
 
-
+    /**
+     * Creates a ray entry
+     * @return the ray entry
+     */
     private Circle createEntry()
     {
         Circle entry = new Circle();
