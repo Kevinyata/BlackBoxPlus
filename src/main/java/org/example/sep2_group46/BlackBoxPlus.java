@@ -141,9 +141,8 @@ public class BlackBoxPlus extends Application {
                         misplacedAtomsCount++;
                 }
 
-                //Sets all items in application visible and unclickable
+                //Sets all items in application visible
                 Board.getChildren().forEach(node -> node.setVisible(true));
-                Board.getChildren().forEach(node -> node.setMouseTransparent(true));
 
                 //Score text
                 Text score = new Text();
