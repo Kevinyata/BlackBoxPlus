@@ -42,7 +42,7 @@ public class RayEntry {
      * Allows for the ray entries to be clickable
      * @param Board used to update the display
      * @param atomCreator used in the createRayPath function
-     * @return the ray entry which is used in the calculations for the score
+     * @return the ray path builder which is used in the calculations for the score
      */
     public RayPath entryRayBuilder(Pane Board, AtomCreator atomCreator)
     {

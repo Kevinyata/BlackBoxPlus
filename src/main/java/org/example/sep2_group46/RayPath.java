@@ -214,7 +214,6 @@ public class RayPath {
                             int[] indx = new int[2];
                             indx[0] = adjacentHexagon; //where ray hits first circle of influence
                             indx[1] = countAndSecondOccurrence[1]; //where ray hits second circle of influence
-
                             //Ray is set invisible
                             Rays.get(index).setVisible(false);
 
@@ -384,7 +383,7 @@ public class RayPath {
      * Calculates the amount of circle of influences hit
      * @param HexagonsIndex the array containing all hexagons and their adjacent hexagons
      * @param key the current atom location and their adjacent hexagons
-     * @return the amount of circle of influences hit
+     * @return the amount of circle of influences hit and the contact point of the 2nd occurrence if there is one
      */
     public int[] countOccurrences(int[][] HexagonsIndex, int key)
     {
