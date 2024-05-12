@@ -202,12 +202,6 @@ public class AtomCreator
             }
         }
 
-        //For debugging
-        System.out.print("An atom located at Hexagonal Location " + hexagonLocation + " has its circle of influence touch hexagon locations:");
-        for(int i = 0; i < 6; i++) {
-            System.out.print(" " + COIHexagonIndex[atomNumber][i] + ",");
-        }
-        System.out.print("\n");
     }
 
     /**
