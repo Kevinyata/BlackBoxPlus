@@ -220,10 +220,6 @@ public class RayPath {
                             //Adds previous ray to pane
                             Board.getChildren().add(Rays.get(index++));
 
-                            //For debugging
-                            System.out.println("\nFirst Contact Point: " + adjacentHexagon);
-                            System.out.println("count: " + countAndSecondOccurrence[0]);
-
                             //Deflects ray appropriately
                             double[] Vel = deflectRay(addToXCoordinates, addToYCoordinates, indx, countAndSecondOccurrence[0]);
                             addToYCoordinates = Vel[1] / 2;
@@ -494,7 +490,6 @@ public class RayPath {
         }
         else if(count == 2) //two circles of influence are detected
        {
-           System.out.println("Second contact point: " + secondContactPoint);
             if(addToXCoordinates > 0 && addToYCoordinates == 0) //ray coming from west cases
             {
                 if(firstContactPoint == bottomLeft && secondContactPoint == topLeft || secondContactPoint == bottomLeft && firstContactPoint == topLeft)
